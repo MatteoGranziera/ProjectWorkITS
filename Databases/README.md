@@ -1,17 +1,14 @@
 #Databases
 
-TweetsDB 
+###TweetsDB 
 
-Descrizione: Contiene i tweets relativi agli argomenti
-
-Tipo: NoSQL
-
-Hash Tags: Python, CS, Javascript, Java, HTML, Cpp, C++, C, Ruby, Perl, Pascal;
+- Descrizione: Contiene i tweets relativi agli argomenti
+- Tipo: NoSQL
+- Hash Tags: Python, CS, Javascript, Java, HTML, Cpp, C++, C, Ruby, Perl, Pascal;
 
 ###################################################################################
 
-WebDB
+###WebDB
 
-Descrizione: Contiene i dati analizzati e che verranno mostrati sulla pagina web
-
-Tipo: PostgreSQL
+- Descrizione: Contiene i dati analizzati e che verranno mostrati sulla pagina web
+- Tipo: PostgreSQL
