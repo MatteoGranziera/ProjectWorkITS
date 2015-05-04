@@ -1,4 +1,4 @@
-#TweetsReading
+#TweetsReader
 
 Scripts per l'estrazione dei tweets relativi all' argomento:
 
