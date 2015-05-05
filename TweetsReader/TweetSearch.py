@@ -2,8 +2,8 @@
 Example of twitter API usage.
 
 Requires Twitter APP credentials stored in the following env vars:
-  APP_KEY
-  APP_SECRET
+  TWITTER_API_PKEY
+  TWITTER_API_SECRET
 
 Saves tweets in the DB.
 '''
@@ -35,7 +35,7 @@ def get_tweets(word, token):
     url = 'https://api.twitter.com/1.1/search/tweets.json'
     resp = requests.get(
         url,
-        params={'q': word, 'lang': 'it'},
+        params={'q': word, 'lang': 'it', 'count':100},
         headers={'Authorization': 'Bearer {}'.format(token)}
     )
     resp.raise_for_status()
