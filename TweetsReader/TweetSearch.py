@@ -44,8 +44,8 @@ def get_bearer_token(consumer_key, app_secret):
     )
     resp.raise_for_status()
     resp_data = resp.json()
-    return resp_data
-    #return resp_data['access_token']
+    #return resp_data
+    return resp_data['access_token']
 
 #URL to make request: https://api.twitter.com/1.1/geo/search.json
 #Method: GET
