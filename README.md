@@ -5,6 +5,7 @@ Sviluppatori:
 - Matteo Granziera
 - Alessio De Luca
 - Nicola Tedesco
+- Oleg Kinev
 
 Diagramma del Progetto:
 
