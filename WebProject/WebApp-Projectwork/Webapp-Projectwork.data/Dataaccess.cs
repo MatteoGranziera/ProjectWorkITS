@@ -66,7 +66,7 @@ SELECT id
                 string query = @"
 SELECT id
       ,nome
-  FROM language";
+  FROM languages";
 
                 using (NpgsqlCommand command = connection.CreateCommand())
                 {
@@ -102,9 +102,9 @@ SELECT id
                 connection.Open();
 
                 string query = @"
-SELECT id_country
-      ,id_language
+SELECT id
       ,score
+      ,month
   FROM score";
 
                 using (NpgsqlCommand command = connection.CreateCommand())
@@ -120,9 +120,9 @@ SELECT id_country
                     {
                         score score = new score();
 
-                        score.id_country = (int)reader["id_country"];
-                        score.id_language = (int)reader["id_language"];
-                        score.final_score = (int)reader["final_score"];
+                        score.id = (int)reader["id"];
+                        score.final_score = (int)reader["score"];
+                        score.month = (DateTime)reader["month"];
 
 
                         Scores.Add(score);

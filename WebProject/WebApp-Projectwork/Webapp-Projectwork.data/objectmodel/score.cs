@@ -8,9 +8,10 @@ namespace Projectwork.db.data.objectmodel
 {
     public class score
     {
-        public int id_country { get; set; }
-        public int id_language { get; set; }
+        public int id { get; set; }
         public int final_score  { get; set; }
+        public DateTime month { get; set; }
+
 
     }
 }

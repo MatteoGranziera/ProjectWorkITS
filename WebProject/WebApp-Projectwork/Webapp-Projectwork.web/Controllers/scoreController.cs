@@ -20,9 +20,9 @@ namespace WebApplication1.Controllers
             foreach (var item in scores)
             {
                 scoreModel score = new scoreModel();
-                score.id_country = item.id_country;
-                score.id_language = item.id_language;
+                score.id = item.id;
                 score.final_score = item.final_score;
+                score.month = item.month;
 
                 resultscore.Add(score);
             }
