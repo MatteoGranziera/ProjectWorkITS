@@ -3,7 +3,7 @@
 
 CREATE SEQUENCE sequence_country START 1;
 CREATE TABLE country (
-id integer,
+id integer DEFAULT nextval('sequence_country'),
 nome varchar(30),
 PRIMARY KEY (id));
 
@@ -12,7 +12,7 @@ PRIMARY KEY (id));
 
 CREATE SEQUENCE sequence_languages START 1;
 CREATE TABLE languages (
-id integer,
+id integer DEFAULT nextval('sequence_languages'),
 nome varchar(30),
 PRIMARY KEY (id));
 
@@ -23,6 +23,7 @@ PRIMARY KEY (id));
 
 CREATE SEQUENCE sequence_score START 1;
 CREATE TABLE score (
+id integer DEFAULT nextval('sequence_score'),
 id_country integer,
 id_language integer,
 score integer,
