@@ -26,6 +26,7 @@ CREATE TABLE score (
 id_country integer,
 id_language integer,
 score integer,
+month date, #first day of the month
 PRIMARY KEY (id_country, id_language),
 FOREIGN KEY(id_country) REFERENCES country(id),
 FOREIGN KEY(id_language) REFERENCES languages(id));
