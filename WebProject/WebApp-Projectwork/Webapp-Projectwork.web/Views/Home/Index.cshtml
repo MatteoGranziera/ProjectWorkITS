@@ -1,0 +1,28 @@
+﻿
+<div id="pnl"></div>
+
+@section scripts{
+
+    <script type="text/javascript">
+        var pnl = $("#pnl");
+
+
+        $.ajax({
+            url: '/api/country',
+            type: 'GET',
+            dataType: 'json'
+        }).done(function (data) {
+            var html = '';
+            for (var i = 0; i < data.length; i++) {
+                var resultcountry = data[i];
+
+                html = html + '<h3>' + resultcountry.id + " " + resultcountry.nome; '</h3><br/>';
+
+            }
+
+            pnl.html(html);
+        }).error(function (e) {
+            alert("errore")
+        })
+    </script>
+}
