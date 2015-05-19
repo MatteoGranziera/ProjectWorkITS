@@ -54,9 +54,9 @@ SELECT id
                 }
             }
         }
-        
-        
-        
+
+
+
         public IEnumerable<language> GetLanguages()
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
@@ -91,10 +91,10 @@ SELECT id
                 }
             }
         }
-        
-        
-        
-        
+
+
+
+
         public IEnumerable<score> GetScores()
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
