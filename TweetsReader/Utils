@@ -1,0 +1,25 @@
+Utilities:
+
+To get limit of specific resource and remaining requests of that one:
+URL:
+	https://api.twitter.com/1.1/application/rate_limit_status.json
+Method:
+	GET
+Params:
+	reaources: <resource name> (search, users ...)
+Headers:
+	Authorization: Bearer <token>
+	
+
+To get state's id by name:
+URL:
+	https://api.twitter.com/1.1/geo/search.json
+Method:
+	GET
+Headers:
+	Authorization: Bearer <token>
+Params:
+	query: <state name>
+
+Twitter error codes:
+	Link: https://dev.twitter.com/overview/api/response-codes

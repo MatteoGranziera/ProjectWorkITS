@@ -1,11 +1,20 @@
 '''
-Example of twitter API usage.
+TODO:
+    Finish cleaning tweets
+    Redis connection and put tweets in queue
+    Log system
+'''
+
+
+'''
+Module used to:
+    connect with twitter APIs and get tweets
+    clean tweets from it's useless parts
+    saves tweets in a Redis queue
 
 Requires Twitter APP credentials stored in the following env vars:
   TWITTER_API_PKEY
   TWITTER_API_SECRET
-
-Saves tweets in the DB.
 '''
 # standard library
 import base64
@@ -13,46 +22,36 @@ import json
 
 # 3rd party
 import requests
+import redis
 
 
-def get_bearer_token(consumer_key, app_secret):
+def get_bearer_token(consumer_key, secret_key):
     '''
+    Parameters:
+        consumer_key: public key of my Twitter applications
+        secret_key: secret key of my Twitter applications
     Returns:
-        a token needed to work with twitter APIs
+        a token (bearer) we need to authenticate requests to Twitter APIs
     '''
-    credentials = '{}:{}'.format(consumer_key, app_secret)
+    credentials = '{}:{}'.format(consumer_key, secret_key)
     credentials_enc = base64.b64encode(credentials.encode())
-    '''
+    url = 'https://api.twitter.com/oauth2/token'
+    ctype = 'application/x-www-form-urlencoded;charset=UTF-8'
     resp = requests.post(
-        'https://api.twitter.com/oauth2/token',
-        headers={'Authorization': 'Basic {}'.format(credentials_enc.decode())},
-        data={'grant_type': 'client_credentials'}
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    bearer_token = base64.b64encode(data['access_token'].encode())
-    resp = requests.post(
-        'https://api.twitter.com/oauth2/token',
-        headers={'Authorization': 'Basic {}'.format(bearer_token.decode()), 'Content_type':'application/x-www-form-urlencoded;charset=UTF-8'.encode()},
-        data={'grant_type': 'client_credentials'}
-    )
-    '''
-    resp = requests.post(
-        'https://api.twitter.com/oauth2/token',
-        headers={'Authorization': 'Basic {}'.format(credentials_enc.decode()), 'Content_type':'application/x-www-form-urlencoded;charset=UTF-8'.encode()},
+        url,
+        headers={'Authorization': 'Basic {}'.format(credentials_enc.decode()), 'Content_type':ctype.encode()},
         data={'grant_type': 'client_credentials'}
     )
     resp.raise_for_status()
     resp_data = resp.json()
-    #return resp_data
     return resp_data['access_token']
 
-#URL to make request: https://api.twitter.com/1.1/geo/search.json
-#Method: GET
-#Headers: 'Authorization':'Bearer <token>'
-#Params: 'query':'<state name>'
+
 def get_tweets(word, token):
     '''
+    Parameters:
+        word: the query to make to search API
+        token: the key we need to authenticate requests
     Returns:
       a list of tweets (dictionaries) as returned by twitter API
     '''
@@ -86,26 +85,44 @@ def get_tweets(word, token):
     "Sweeden":"82b141af443cb1b8",
     "United Kingdom":"6416b8512febefc9",
     }
-    url = 'https://api.twitter.com/1.1/search/tweets.json'
-    resp = requests.get(
-        url,
-        params={'q': word, 'lang': 'it', 'count':100, 'result_type':'both'},
-        headers={'Authorization': 'Bearer {}'.format(token)}
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    return data['statuses']
+
+    for state in states_id:
+        resp = requests.get(
+            'https://api.twitter.com/1.1/search/tweets.json',
+            params={'q':'place:' + states_id.get(state) + ' ' +  word, 'count':1, 'result_type':'recent'},
+            headers={'Authorization': 'Bearer {}'.format(token)}
+            )
+        resp.raise_for_status()
+        data = resp.json()
+        data = data['statuses']
+        if len(datas) == 0:
+            datas = data
+        else:
+            datas.update(data)
+    return datas
 
 def clean_tweets(tweets):
-    #First clean, then save! DIO CAN!
-    keys = ['coordinates', 'lang', 'place', ]
-    #for tweet in tweets:
+    words = ['geo', 'coordinates', 'in_reply_to_user_id_str', 'in_reply_to_screen_name', 'in_reply_to_user_id', 'truncated', 'metadata',
+    'in_reply_to_status_id', 'favorited', 'user', 'favorite_count', 'lang', 'id_str', 'contributors', 'source', 'id', 'in_reply_to_status_id_str',
+    'place', 'possibly_sensitive', ]
+    try:
+        for tweet in tweets:
+            for word in words:
+                del(tweet[word])
+            tweet['hashtags'] = tweet['entities']['hashtags']
+            del(tweet['entities']['hashtags'])
+    except KeyError:
+        pass
+    return tweets #sputarli con "" invece di ''
 
-    tweets = json.dumps(tweets)
-    out = open('./prova','w')
-    out.write(tweets)
-    out.close()
-    return tweets
+'''
+def save_tweets(tweets):
+    
+    Parameters:
+        tweets: a list of tweets to put in redis queue
+
+    When the last tweet is pushed in queue, push a last final string
+'''
 
 if __name__ == '__main__':
     import os
@@ -117,6 +134,8 @@ if __name__ == '__main__':
         )
     print('bearer token created!')
     print('getting tweets')
-    tweets = get_tweets(sys.argv[1], token)
-    print('got {} tweets'.format(len(tweets)))
+    word = sys.argv[1][:500] if len(sys.argv[1] > 500) else sys.argv[1]
+    tweets = get_tweets(word, token)
+    #print('got {} tweets'.format(len(tweets)))
+    print('cleaning tweets')
     tweets = clean_tweets(tweets)

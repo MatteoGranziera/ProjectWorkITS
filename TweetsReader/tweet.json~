@@ -1,0 +1,21 @@
+{
+'search_metadata': {'count': 1, 'since_id_str': '0', 'next_results': '?max_id=596766722788569087&q=python&lang=it&count=1&include_entities=1&result_type=both', 'max_id': 596766722788569088, 'since_id': 0, 'max_id_str': '596766722788569088', 'query': 'python', 'completed_in': 0.015, 'refresh_url': '?since_id=596766722788569088&q=python&lang=it&result_type=both&include_entities=1'},
+
+'statuses': 
+[
+{'created_at': 'Fri May 08 20:00:48 +0000 2015',
+'retweeted': False, 
+'text': '@Python_00 frosinone culone', 
+'entities': {'user_mentions': [{'id': 421431976, 'name': 'Python', 'indices': [0, 10], 'id_str': '421431976', 'screen_name': 'Python_00'}], 'urls': [], 'symbols': [], 'hashtags': []}, 
+'retweet_count': 0, 
+'favorite_count': 0, 
+'lang': 'it', 
+'id_str': '596766722788569088', 
+'contributors': None, 
+'source': '<a href="http://twitter.com/download/iphone" rel="nofollow">Twitter for iPhone</a>', 
+'id': 596766722788569088, 
+'in_reply_to_status_id_str': '596755027269689345', 
+'place': None
+}
+]
+}
