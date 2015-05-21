@@ -156,6 +156,7 @@
     <Content Include="Content\cssmap-europe\eu-750.png" />
     <Content Include="Content\cssmap-europe\eu-850.png" />
     <Content Include="Content\cssmap-europe\eu-960.png" />
+    <Content Include="Content\StyleSheetProjectwork.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -163,6 +164,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\JavaScriptProjectwork.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
