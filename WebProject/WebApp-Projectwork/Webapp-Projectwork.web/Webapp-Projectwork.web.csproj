@@ -145,6 +145,17 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\cssmap-europe\cssmap-europe.css" />
+    <Content Include="Content\cssmap-europe\eu-1280.png" />
+    <Content Include="Content\cssmap-europe\eu-1450.png" />
+    <Content Include="Content\cssmap-europe\eu-250.png" />
+    <Content Include="Content\cssmap-europe\eu-320.png" />
+    <Content Include="Content\cssmap-europe\eu-430.png" />
+    <Content Include="Content\cssmap-europe\eu-540.png" />
+    <Content Include="Content\cssmap-europe\eu-650.png" />
+    <Content Include="Content\cssmap-europe\eu-750.png" />
+    <Content Include="Content\cssmap-europe\eu-850.png" />
+    <Content Include="Content\cssmap-europe\eu-960.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -155,6 +166,7 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.cssmap.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
