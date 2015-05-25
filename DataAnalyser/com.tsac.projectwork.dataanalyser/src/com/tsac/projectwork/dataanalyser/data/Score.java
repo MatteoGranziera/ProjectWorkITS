@@ -1,21 +1,29 @@
 package com.tsac.projectwork.dataanalyser.data;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Score {
-	
+	private int id;
 	private String pLanguage;
 	private String country;
 	private Date month;
 	private int valScore;
 
-	public Score(String pLanguage, String country, Date month, int valScore) {
+	public Score(String pLanguage, String country, Date date, int valScore) {
 		this.pLanguage = pLanguage;
 		this.country = country;
-		this.month = month;
+		this.month = date;
 		this.valScore = valScore;
 	}
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getpLanguage() {
 		return pLanguage;
 	}
