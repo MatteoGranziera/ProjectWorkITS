@@ -1,0 +1,83 @@
+﻿<h1>Interrogazione Database postgresql</h1>
+
+<h2>Tabella country</h2>
+
+<div id="pnl"></div>
+
+<h2>Tabella language</h2>
+
+<div id="lan"></div>
+
+<h2>Tabella score</h2>
+
+<div id="sco"></div>
+    
+@section scripts{
+        <script type="text/javascript">
+            var pnl = $("#pnl");
+
+
+            $.ajax({
+                url: '/api/country',
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (data) {
+                var html = '';
+                for (var i = 0; i < data.length; i++) {
+                    var resultcountry = data[i];
+
+                    html = html + '<h3>' + resultcountry.id + " " + resultcountry.nome; '</h3><br/>';
+
+                }
+
+                pnl.html(html);
+            }).error(function (e) {
+                alert("errore")
+            })
+
+
+            var lan = $("#lan");
+            $.ajax({
+                url: '/api/language',
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (data) {
+                var html = '';
+                for (var i = 0; i < data.length; i++) {
+                    var resultlanguage = data[i];
+
+                    html = html + '<h3>' + resultlanguage.id + " " + resultlanguage.nome; '</h3><br/>';
+
+                }
+
+                lan.html(html);
+            }).error(function (e) {
+                alert("errore")
+            })
+
+            var sco = $("#sco");
+        $.ajax({
+            url: '/api/score',
+            type: 'GET',
+            dataType: 'json'
+        }).done(function (data) {
+            var html = '';
+            for (var i = 0; i < data.length; i++) {
+                var resultscore = data[i];
+
+                html = html + '<h3>' + resultscore.id + " " + resultscore.final_score; + " " + resultscore.month; '</h3><br/>';
+
+            }
+
+            sco.html(html);
+        }).error(function (e) {
+            alert("errore")
+        })
+
+        
+        
+         </script>
+    }
+
+
+
