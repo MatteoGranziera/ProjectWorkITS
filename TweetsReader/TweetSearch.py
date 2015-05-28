@@ -1,8 +1,9 @@
+#!/usr/bin/python3
 '''
 TODO:
-    Finish cleaning tweets
     Redis connection and put tweets in queue
     Log system
+    Replace states_id and languages lists with file read
 '''
 
 
@@ -10,7 +11,7 @@ TODO:
 Module used to:
     connect with twitter APIs and get tweets
     clean tweets from it's useless parts
-    saves tweets in a Redis queue
+    push tweets in a Redis queue
 
 Requires Twitter APP credentials stored in the following env vars:
   TWITTER_API_PKEY
@@ -46,8 +47,7 @@ def get_bearer_token(consumer_key, secret_key):
     resp_data = resp.json()
     return resp_data['access_token']
 
-
-def get_tweets(word, token):
+def get_tweets(token):
     '''
     Parameters:
         word: the query to make to search API
@@ -86,56 +86,95 @@ def get_tweets(word, token):
     "United Kingdom":"6416b8512febefc9",
     }
 
-    for state in states_id:
-        resp = requests.get(
+    languages = ['ASP.NET', 'C', 'C++', 'Delphi', 'C#', 'Fortran', 'Haskell', 'HTML', 'Go', 
+                'Java', 'Javascript', 'Objective-C', 'Perl', 'PHP', 'Python', 'Ruby', 'Scala', 'SQL', 'Swift', 'Visual Basic']
+
+    x = 0
+    for state in states_id.values():
+        for lang in languages:
+            x += 1
+            resp = requests.get(
+                'https://api.twitter.com/1.1/search/tweets.json',
+                params={'q':'place:{} {}'.format(state, languages), 'count':100},
+                headers={'Authorization': 'Bearer {}'.format(token)}
+                )
+            resp.raise_for_status()
+            data = resp.json()
+            print('cleaning tweets ' + str(x) + ' len: ' + str(len(data['statuses'])))
+        #clean_tweets(data['statuses'])
+    return
+
+def get_once(word, token):
+    resp = requests.get(
             'https://api.twitter.com/1.1/search/tweets.json',
-            params={'q':'place:' + states_id.get(state) + ' ' +  word, 'count':1, 'result_type':'recent'},
+            params={'q':'place:6416b8512febefc9 '+ word, 'count':3, 'result_type':'recent'},
             headers={'Authorization': 'Bearer {}'.format(token)}
             )
-        resp.raise_for_status()
-        data = resp.json()
-        data = data['statuses']
-        if len(datas) == 0:
-            datas = data
-        else:
-            datas.update(data)
-    return datas
+    resp.raise_for_status()
+    data = resp.json()
+    print('get {} tweets'.format(str(len(data['statuses']))))
+    tweets = clean_tweets(data['statuses'])
+    save_tweets(tweets)
+    #return data['statuses']
+
+def prova_tweets(word, token):
+    resp = requests.get(
+            'https://api.twitter.com/1.1/search/tweets.json',
+            params={'q':'place:6416b8512febefc9 '+ word, 'count':1, 'result_type':'recent'},
+            headers={'Authorization': 'Bearer {}'.format(token)}
+            )
+    resp.raise_for_status()
+    data = resp.json()
+    tweets = clean_tweets(data['statuses'])
+    return data['statuses']
 
 def clean_tweets(tweets):
-    words = ['geo', 'coordinates', 'in_reply_to_user_id_str', 'in_reply_to_screen_name', 'in_reply_to_user_id', 'truncated', 'metadata',
-    'in_reply_to_status_id', 'favorited', 'user', 'favorite_count', 'lang', 'id_str', 'contributors', 'source', 'id', 'in_reply_to_status_id_str',
-    'place', 'possibly_sensitive', ]
-    try:
-        for tweet in tweets:
-            for word in words:
+    #keys not to cancel: text, created_at, place
+    words = ['metadata', 'id', 'favorite_count', 'possibly_sensitive', 'source', 'geo', 'in_reply_to_status_id_str', 
+    'in_reply_to_status_id', 'in_reply_to_user_id', 'user', 'truncated', 'in_reply_to_user_id_str', 'in_reply_to_screen_name', 
+    'contributors', 'lang', 'coordinates', 'entities', 'retweeted_status', 'id_str', 'favorited', 'place']
+    for tweet in tweets:
+        #tweet['state'] = tweet['place']['country']
+        #tweet['state'] = tweet['place']
+        #tweet['state'] = str(tweet['state']['country'])
+        tweet['state'] = str(tweet['place']['country'])
+        tweet['hashtags'] = tweet['entities']['hashtags']
+        for word in words:
+            try:
                 del(tweet[word])
-            tweet['hashtags'] = tweet['entities']['hashtags']
-            del(tweet['entities']['hashtags'])
-    except KeyError:
-        pass
-    return tweets #sputarli con "" invece di ''
+            except KeyError:
+                pass
+    return tweets
 
-'''
+
 def save_tweets(tweets):
-    
+    POOL = redis.ConnectionPool(host = '192.168.101.83', port = 6379, db = 0)
+    con = redis.Redis(connection_pool=POOL)
+    for tweet in tweets:
+        redis.Redis.rpush(con, 'tweets', tweet)
+    '''
     Parameters:
         tweets: a list of tweets to put in redis queue
-
-    When the last tweet is pushed in queue, push a last final string
-'''
+    '''
+    #When the last tweet is pushed in queue, push a last final string
+    return
 
 if __name__ == '__main__':
     import os
     import sys
-    print('getting bearer token')
+    import logging
+    logging.basicConfig(filename='log2.log', format='%(asctime)s %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
+    logging.info('Started')
+    logging.info('getting bearer token')
     token = get_bearer_token(
         os.getenv('TWITTER_API_PKEY'),
         os.getenv('TWITTER_API_SECRET')
         )
-    print('bearer token created!')
-    print('getting tweets')
-    word = sys.argv[1][:500] if len(sys.argv[1] > 500) else sys.argv[1]
-    tweets = get_tweets(word, token)
-    #print('got {} tweets'.format(len(tweets)))
-    print('cleaning tweets')
-    tweets = clean_tweets(tweets)
+    logging.info('bearer token created!')
+    logging.info('getting tweets')
+    word = sys.argv[1][:500] if len(sys.argv[1]) > 500 else sys.argv[1]
+    #tweets = get_tweets(token)
+    tweets = get_once(word, token)
+    
+    logging.info('Finished')
+    sys.exit(0)
