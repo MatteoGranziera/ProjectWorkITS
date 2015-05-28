@@ -3,7 +3,7 @@ package com.tsac.projectwork.dataanalyser;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisException;
 
-public class DbReader {
+public class DbReader implements AutoCloseable{
 	Jedis conn = null;
 	String source = "";
 
@@ -23,7 +23,7 @@ public class DbReader {
 	
 	public String getNextTweet(){
 		if(conn!= null && conn.isConnected()){
-			return conn.get("TweetTest");
+			return conn.lpop("Tweets");
 		}
 		else
 			return "NaN";
@@ -34,5 +34,11 @@ public class DbReader {
 			conn.close();
 		}
 
+	}
+
+	@Override
+	public void close() throws Exception {
+		disconnect();
+		
 	}
 }
