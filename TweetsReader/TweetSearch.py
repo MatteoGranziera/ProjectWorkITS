@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 '''
 TODO:
-    Redis connection and put tweets in queue
-    Log system
+    improve log system
     Replace states_id and languages lists with file read
 '''
 
@@ -24,7 +23,6 @@ import json
 # 3rd party
 import requests
 import redis
-
 
 def get_bearer_token(consumer_key, secret_key):
     '''
@@ -89,44 +87,23 @@ def get_tweets(token):
     languages = ['ASP.NET', 'C', 'C++', 'Delphi', 'C#', 'Fortran', 'Haskell', 'HTML', 'Go', 
                 'Java', 'Javascript', 'Objective-C', 'Perl', 'PHP', 'Python', 'Ruby', 'Scala', 'SQL', 'Swift', 'Visual Basic']
 
+    languages = '"ASP.NET" OR "C" OR "C++" OR Delphi OR "C#" OR Fortran OR Haskell OR HTML OR Go OR Java OR Javascript OR "Objective-C" OR Perl OR PHP OR Python OR Ruby OR Scala OR SQL OR Swift OR "Visual Basic"'
+
     x = 0
     for state in states_id.values():
-        for lang in languages:
-            x += 1
-            resp = requests.get(
-                'https://api.twitter.com/1.1/search/tweets.json',
-                params={'q':'place:{} {}'.format(state, languages), 'count':100},
-                headers={'Authorization': 'Bearer {}'.format(token)}
-                )
-            resp.raise_for_status()
-            data = resp.json()
-            print('cleaning tweets ' + str(x) + ' len: ' + str(len(data['statuses'])))
-        #clean_tweets(data['statuses'])
+        x += 1
+        resp = requests.get(
+            'https://api.twitter.com/1.1/search/tweets.json',
+            params={'q':'place:{} {}'.format(state, languages), 'count':100},
+            headers={'Authorization': 'Bearer {}'.format(token)}
+            )
+        resp.raise_for_status()
+        tweets = resp.json()
+        log.info('cleaning tweets ' + str(x) + ' len: ' + str(len(tweets['statuses'])))
+        tweets = clean_tweets(tweets['statuses'])
+        log.info('saving tweets')
+        save_tweets(tweets)
     return
-
-def get_once(word, token):
-    resp = requests.get(
-            'https://api.twitter.com/1.1/search/tweets.json',
-            params={'q':'place:6416b8512febefc9 '+ word, 'count':3, 'result_type':'recent'},
-            headers={'Authorization': 'Bearer {}'.format(token)}
-            )
-    resp.raise_for_status()
-    data = resp.json()
-    print('get {} tweets'.format(str(len(data['statuses']))))
-    tweets = clean_tweets(data['statuses'])
-    save_tweets(tweets)
-    #return data['statuses']
-
-def prova_tweets(word, token):
-    resp = requests.get(
-            'https://api.twitter.com/1.1/search/tweets.json',
-            params={'q':'place:6416b8512febefc9 '+ word, 'count':1, 'result_type':'recent'},
-            headers={'Authorization': 'Bearer {}'.format(token)}
-            )
-    resp.raise_for_status()
-    data = resp.json()
-    tweets = clean_tweets(data['statuses'])
-    return data['statuses']
 
 def clean_tweets(tweets):
     #keys not to cancel: text, created_at, place
@@ -134,10 +111,8 @@ def clean_tweets(tweets):
     'in_reply_to_status_id', 'in_reply_to_user_id', 'user', 'truncated', 'in_reply_to_user_id_str', 'in_reply_to_screen_name', 
     'contributors', 'lang', 'coordinates', 'entities', 'retweeted_status', 'id_str', 'favorited', 'place']
     for tweet in tweets:
-        #tweet['state'] = tweet['place']['country']
-        #tweet['state'] = tweet['place']
-        #tweet['state'] = str(tweet['state']['country'])
-        tweet['state'] = str(tweet['place']['country'])
+        if tweet['place'] != None:
+            tweet['state'] = tweet['place']['country']
         tweet['hashtags'] = tweet['entities']['hashtags']
         for word in words:
             try:
@@ -163,18 +138,21 @@ if __name__ == '__main__':
     import os
     import sys
     import logging
-    logging.basicConfig(filename='log2.log', format='%(asctime)s %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
-    logging.info('Started')
-    logging.info('getting bearer token')
+    from logentries import LogentriesHandler
+    log = logging.getLogger('logentries')
+    log.setLevel(logging.INFO)
+    log.addHandler(LogentriesHandler('3f3c4ae6-7a37-4426-8ec2-a23af8c3014a'))
+    #logging.basicConfig(filename='log2.log', format='%(asctime)s %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
+    #logging.info('Started')
+    #logging.info('getting bearer token')
+    log.info('Started')
+    log.info('getting bearer token')
     token = get_bearer_token(
         os.getenv('TWITTER_API_PKEY'),
         os.getenv('TWITTER_API_SECRET')
         )
-    logging.info('bearer token created!')
-    logging.info('getting tweets')
-    word = sys.argv[1][:500] if len(sys.argv[1]) > 500 else sys.argv[1]
-    #tweets = get_tweets(token)
-    tweets = get_once(word, token)
-    
+    log.info('bearer token created!')
+    log.info('getting tweets')
+    tweets = get_tweets(token)
     logging.info('Finished')
     sys.exit(0)
