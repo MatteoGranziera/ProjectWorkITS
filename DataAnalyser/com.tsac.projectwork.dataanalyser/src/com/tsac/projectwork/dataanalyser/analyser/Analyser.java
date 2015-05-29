@@ -6,18 +6,27 @@ import java.util.List;
 import org.json.JSONException;
 
 import com.tsac.projectwork.dataanalyser.DbReader;
+import com.tsac.projectwork.dataanalyser.config.ConfigManager;
 import com.tsac.projectwork.dataanalyser.data.*;
 
 public class Analyser{
-	private int DEFAULT_NUM_TWEETS = 10;
 	private int num_tweets = 10;
+	private List<Score> scoreList = new ArrayList<Score>();
+	private String[] languages = null;
 	
 	public void StartWorker(){
+		num_tweets = Integer.parseInt(ConfigManager.getConfig(ConfigManager.Names.NUM_TWEETS_THREAD));
+		languages = ConfigManager.getLanguages();
 		while(true){
 			List<Tweet> tweets = ReadTweets();
 			
 			for(Tweet t : tweets){
-				
+				try {
+					Analyse(t);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			
 		}
@@ -26,11 +35,12 @@ public class Analyser{
 	private List<Tweet> ReadTweets(){
 		try(DbReader dbr = new DbReader()){
 			
-			dbr.connect("192.168.56.101");
+			dbr.connect();
 			
 			List<Tweet> tweets = new ArrayList<Tweet>();
-			for(int i = 0; i < num_tweets ; i++){
-				tweets.add(new Tweet(dbr.getNextTweet()));
+			Tweet extract = null;
+			for(int i = 0; i < num_tweets && (extract = new Tweet(dbr.getNextTweet())) != null ; i++){
+				tweets.add(extract);
 			}
 			
 			return tweets;
@@ -42,12 +52,23 @@ public class Analyser{
 		
 	}
 	
-	private static Score Analyse(Tweet t) throws JSONException{
-		int scorePoint = 0;
+	private void addScoreToList(List<Score> lst , Score sc){
+		boolean ok = false;
+		for(Score s : lst){
+			if(s.equals(sc)){
+				ok = true;
+				s.setValScore(s.getValScore() + sc.getValScore());
+			}
+		}
+		if(!ok){
+			lst.add(sc);
+		}
+	}
+	
+	private void Analyse(Tweet t) throws JSONException{
 		
-		
-		
-		return new Score(null, t.getCountry(), null, scorePoint);
+		//for(String )
+		addScoreToList(scoreList, null);
 		
 	}
 }
