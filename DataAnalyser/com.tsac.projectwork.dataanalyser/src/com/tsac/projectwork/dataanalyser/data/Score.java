@@ -1,6 +1,7 @@
 package com.tsac.projectwork.dataanalyser.data;
 
 import java.sql.Date;
+import java.util.Calendar;
 
 public class Score {
 	private int id;
@@ -47,6 +48,16 @@ public class Score {
 	}
 	public void setValScore(int valScore) {
 		this.valScore = valScore;
+	}
+	
+	public boolean equals(Score sc){
+		if(sc.getCountry().equals(getCountry()) && 
+				sc.getpLanguage().equals(getpLanguage()) && 
+				(Integer.compare(sc.getMonth().getMonth(),getMonth().getMonth())==0)){
+			return true;
+		}
+		else
+			return false;
 	}
 	
 	
