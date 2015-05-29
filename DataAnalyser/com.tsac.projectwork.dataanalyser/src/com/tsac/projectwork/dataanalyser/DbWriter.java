@@ -2,28 +2,26 @@ package com.tsac.projectwork.dataanalyser;
 
 import java.sql.*;
 
+import com.tsac.projectwork.dataanalyser.config.ConfigManager;
 import com.tsac.projectwork.dataanalyser.data.Score;
 public class DbWriter {
-	//Environment variables names
-	String ENV_ADDRESS = "PW_ADDRESS";
-	String ENV_PASSWD = "PW_PASSWD";
-	String ENV_USER = "PW_USERNAME";
-	
 	//Connection variables
 	String address = "";
 	String username = "";
 	String password = "";
 	
 	Connection db = null;
+	boolean auto_commit = false;
 	
-	private void LoadEnvVariable(){
-		address = System.getenv(ENV_ADDRESS);
-		username = System.getenv(ENV_USER);
-		password = System.getenv(ENV_PASSWD);
+	private void LoadVariable(){
+
+		address = ConfigManager.getConfig(ConfigManager.Names.DBWRITER_ADDRESS);
+		username = ConfigManager.getConfig(ConfigManager.Names.DBWRITER_USER);
+		password = ConfigManager.getConfig(ConfigManager.Names.DBWRITER_PASSWORD);
 	}
 	
-	public void Connect() throws ClassNotFoundException, SQLException{
-			LoadEnvVariable();
+	public void Connect(boolean auto_commit) throws ClassNotFoundException, SQLException{
+			LoadVariable();
 			Class.forName("org.postgresql.Driver");
 			db = DriverManager.getConnection(address, username , password);
 			System.out.println(db.isClosed());
@@ -58,8 +56,7 @@ public class DbWriter {
 		rs.close();
 		st.close();
 		return index;
-		
-		
+
 	}
 	
 	public void AddScore(Score sc) throws SQLException

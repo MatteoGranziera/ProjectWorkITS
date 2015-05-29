@@ -1,19 +1,18 @@
 package com.tsac.projectwork.dataanalyser;
 
+import com.tsac.projectwork.dataanalyser.config.ConfigManager;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisException;
 
 public class DbReader implements AutoCloseable{
 	Jedis conn = null;
-	String source = "";
 
-	public void connect(String source) {
+	public void connect() {
 		if (conn == null) {
-			this.source = source;
 			try{
-			conn = new Jedis(source);
+			conn = new Jedis(ConfigManager.getConfig(ConfigManager.Names.DBREADER_ADDRESS_));
 			conn.connect();
-			System.out.println("Connected");
 			}catch(JedisException e){
 				System.out.println(e.getMessage());
 			}
@@ -23,7 +22,7 @@ public class DbReader implements AutoCloseable{
 	
 	public String getNextTweet(){
 		if(conn!= null && conn.isConnected()){
-			return conn.lpop("Tweets");
+			return conn.lpop(ConfigManager.getConfig(ConfigManager.Names.DBREADER_QUEUE_NAME));
 		}
 		else
 			return "NaN";
