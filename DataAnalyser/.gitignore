@@ -27,4 +27,4 @@ local.properties
 *.launch
 
 # Personal ignore
-Servers
+*.config.remote
