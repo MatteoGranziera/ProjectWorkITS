@@ -1,4 +1,5 @@
 ﻿using Projectwork.db.data;
+using Projectwork.db.data.objectmodel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,19 @@ namespace WebApplication1.Controllers
 {
     public class FinalscoreController : ApiController
     {
-        public IHttpActionResult Get()
+        public IHttpActionResult Get(string country)
         {
             DataAccess data = new DataAccess();
-            var products = data.GetFinalscore();
+            Finalscore fsc = new Finalscore()
+            {
+                id= -1,
+                namecountry = country,
+                namelanguage = "Nan",
+                month = new DateTime(1800, 1, 1),
+                score = -1
+            };
+
+            var products = data.GetFinalscore(fsc);
 
             List<FinalscoreModel> result = new List<FinalscoreModel>();
             foreach (var item in products)

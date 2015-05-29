@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "ViewC";
+}
+
+<h2>ViewC</h2>
+<div id="pnl"></div>
+@section scripts{
+<script type="text/javascript">
+    
+    $.ajax({
+        url: '/api/Finalscore?country=@ViewBag.Country',
+        type: 'GET',
+        dataType: 'json'
+    }).done(function (data) {
+        var html = '';
+        for (var i = 0; i < data.length; i++) {
+            var resultcountry = data[i];
+
+            html = html + '<h3>' + resultcountry.namecountry + " " + resultcountry.namelanguage + " " + resultcountry.score + '</h3><br/>';
+
+        }
+
+        $('#pnl').html(html);
+    }).error(function (e) {
+        alert("errore")
+    })
+</script>
+}
