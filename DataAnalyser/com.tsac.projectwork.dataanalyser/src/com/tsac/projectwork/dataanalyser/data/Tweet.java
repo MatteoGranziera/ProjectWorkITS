@@ -8,14 +8,28 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.tsac.projectwork.dataanalyser.config.ConfigManager;
+
 public class Tweet {
 	//JSON KEYS
-	private String KEY_TEXT = "text";
-	private String KEY_CREATION = "created_at";
-	private String KEY_RETWITTED = "retweeted";
-	private String KEY_ENTITIES = "hashtags";
-	private String KEY_RETWEET_COUNT = "retweet_count";
-	private String KEY_COUNTRY = "country";
+	public static class Keys{
+		private static String KEY_TEXT = "";
+		private static String KEY_CREATION = "";
+		private static String KEY_RETWITTED = "";
+		private static String KEY_ENTITIES = "";
+		private static String KEY_RETWEET_COUNT = "";
+		private static String KEY_COUNTRY = "";
+		
+		public static void LoadKeys(){
+			KEY_TEXT = ConfigManager.getConfig(ConfigManager.Names.JSON_KEY_TEXT);
+			KEY_CREATION = ConfigManager.getConfig(ConfigManager.Names.JSON_KEY_CREATION);
+			KEY_RETWITTED = ConfigManager.getConfig(ConfigManager.Names.JSON_KEY_RETWITTED);
+			KEY_ENTITIES = ConfigManager.getConfig(ConfigManager.Names.JSON_KEY_ENTITIES);
+			KEY_RETWEET_COUNT = ConfigManager.getConfig(ConfigManager.Names.JSON_KEY_RETWEET_COUNT);
+			KEY_COUNTRY = ConfigManager.getConfig(ConfigManager.Names.JSON_KEY_COUNTRY);
+		}
+	}
+	
 	
 	//Utils Strings
 	private String NULL_STRING = "NaN";
@@ -33,7 +47,7 @@ public class Tweet {
 	
 	public String getText() throws JSONException{
 		if(jsonObj != null){
-			return jsonObj.getString(KEY_TEXT);
+			return jsonObj.getString(Keys.KEY_TEXT);
 		}
 		return NULL_STRING;
 	}
@@ -41,36 +55,35 @@ public class Tweet {
 	public Date getCreation() throws JSONException, ParseException{
 		if(jsonObj != null){
 			SimpleDateFormat sf = new SimpleDateFormat(TWITTER_DATE);
-			return new Date(sf.parse(jsonObj.getString(KEY_CREATION)).getTime());
+			return new Date(sf.parse(jsonObj.getString(Keys.KEY_CREATION)).getTime());
 		}
 		return null;
 	}
 	
 	public boolean getRetweeted() throws JSONException{
 		if(jsonObj != null){
-			return  jsonObj.getBoolean(KEY_RETWITTED);
+			return  jsonObj.getBoolean(Keys.KEY_RETWITTED);
 		}
 		return false;
 	}
 	
 	public int getNumRetweet() throws JSONException{
 		if(jsonObj != null){
-			return jsonObj.getInt(KEY_RETWEET_COUNT);
+			return jsonObj.getInt(Keys.KEY_RETWEET_COUNT);
 		}
 		return -1;
 	}
 	
-	public List<String> getEntities() throws JSONException{
+	public String[] getEntities() throws JSONException{
 		if(jsonObj != null){
-			//  jsonObj.getString(KEY_RETWITTED);
-			return null;
+			return jsonObj.getString(Keys.KEY_RETWITTED).split(",");
 		}
 		return null;
 	}
 	
 	public String getCountry() throws JSONException{
 		if(jsonObj != null){
-			return  jsonObj.getString(KEY_COUNTRY);
+			return  jsonObj.getString(Keys.KEY_COUNTRY);
 		}
 		return NULL_STRING;
 	}
