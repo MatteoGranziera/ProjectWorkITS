@@ -1,6 +1,9 @@
 package com.tsac.projectwork.dataanalyser;
 
 import java.sql.*;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.tsac.projectwork.dataanalyser.config.ConfigManager;
 import com.tsac.projectwork.dataanalyser.data.Score;
@@ -20,9 +23,10 @@ public class DbWriter {
 		password = ConfigManager.getConfig(ConfigManager.Names.DBWRITER_PASSWORD);
 	}
 	
-	public void Connect(boolean auto_commit) throws ClassNotFoundException, SQLException{
+	public void Connect() throws ClassNotFoundException, SQLException{
 			LoadVariable();
 			Class.forName("org.postgresql.Driver");
+			db.setAutoCommit(auto_commit);
 			db = DriverManager.getConnection(address, username , password);
 			System.out.println(db.isClosed());
 	}
@@ -70,10 +74,29 @@ public class DbWriter {
 		st.close();
 	}
 	
+	public void DoCommit() throws SQLException {
+		db.commit();
+	}
+	
 	public void Disconnect() throws SQLException{
 		if(db != null){
 			db.close();
 		}
+	}
+	
+	public Map<String, String[]> Getlanguages() throws ClassNotFoundException, SQLException{
+		Map<String, String[]> langs = new HashMap<String, String[]>();
+		
+		String query = "SELECT L.name, L.tags FROM languages";
+		Statement st = db.createStatement();
+		ResultSet rs = st.executeQuery(query);
+		
+		
+		while(rs.next()){
+			langs.put(rs.getString("name"), rs.getString("tags").split(","));
+		}
+		
+		return langs;
 	}
 	
 	
