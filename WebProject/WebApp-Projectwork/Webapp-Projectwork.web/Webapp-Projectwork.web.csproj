@@ -130,16 +130,12 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\countryController.cs" />
+    <Compile Include="Controllers\FinalscoreController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\languageController.cs" />
-    <Compile Include="Controllers\scoreController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\countryModel.cs" />
-    <Compile Include="Models\languageModel.cs" />
-    <Compile Include="Models\scoreModel.cs" />
+    <Compile Include="Models\FinalscoreModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

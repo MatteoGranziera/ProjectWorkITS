@@ -1,8 +1,10 @@
-﻿var provadati = $('#provadati')
+﻿var mapeurope = $('map-europe ul li')
+var provadati = $('#provadati')
 $(function () {
     $("#map-europe ul li").each(function () {
         $(this).mouseenter(function () {
-            provadati.text('cieo');
+
+            provadati.text("href");
         });
     });
 });
