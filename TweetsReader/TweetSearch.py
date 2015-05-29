@@ -24,6 +24,12 @@ import json
 import requests
 import redis
 
+def set_logger():
+    log = logging.getLogger('logentries')
+    log.setLevel(logging.INFO)
+    log.addHandler(LogentriesHandler(os.getenv('LOGENTRIES_TOKEN')))
+    return log
+
 def get_bearer_token(consumer_key, secret_key):
     '''
     Parameters:
@@ -41,7 +47,10 @@ def get_bearer_token(consumer_key, secret_key):
         headers={'Authorization': 'Basic {}'.format(credentials_enc.decode()), 'Content_type':ctype.encode()},
         data={'grant_type': 'client_credentials'}
     )
-    resp.raise_for_status()
+    #resp.raise_for_status()
+    if resp.status_code() == 200:
+        pass
+    elif resp.status_code() == :
     resp_data = resp.json()
     return resp_data['access_token']
 
@@ -100,9 +109,9 @@ def get_tweets(token):
         resp.raise_for_status()
         tweets = resp.json()
         log.info('cleaning tweets ' + str(x) + ' len: ' + str(len(tweets['statuses'])))
-        tweets = clean_tweets(tweets['statuses'])
+        #tweets = clean_tweets(tweets['statuses'])
         log.info('saving tweets')
-        save_tweets(tweets)
+        #save_tweets(tweets)
     return
 
 def clean_tweets(tweets):
@@ -123,14 +132,14 @@ def clean_tweets(tweets):
 
 
 def save_tweets(tweets):
-    POOL = redis.ConnectionPool(host = '192.168.101.83', port = 6379, db = 0)
-    con = redis.Redis(connection_pool=POOL)
-    for tweet in tweets:
-        redis.Redis.rpush(con, 'tweets', tweet)
     '''
     Parameters:
         tweets: a list of tweets to put in redis queue
     '''
+    POOL = redis.ConnectionPool(host = '192.168.101.83', port = 6379, db = 0)
+    conn = redis.Redis(connection_pool=POOL)
+    for tweet in tweets:
+        redis.Redis.rpush(con, 'tweets', tweet)
     #When the last tweet is pushed in queue, push a last final string
     return
 
@@ -139,20 +148,14 @@ if __name__ == '__main__':
     import sys
     import logging
     from logentries import LogentriesHandler
-    log = logging.getLogger('logentries')
-    log.setLevel(logging.INFO)
-    log.addHandler(LogentriesHandler('3f3c4ae6-7a37-4426-8ec2-a23af8c3014a'))
-    #logging.basicConfig(filename='log2.log', format='%(asctime)s %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
-    #logging.info('Started')
-    #logging.info('getting bearer token')
+    log = set_logger()
     log.info('Started')
     log.info('getting bearer token')
     token = get_bearer_token(
         os.getenv('TWITTER_API_PKEY'),
         os.getenv('TWITTER_API_SECRET')
         )
-    log.info('bearer token created!')
-    log.info('getting tweets')
+    log.info('Getting tweets')
     tweets = get_tweets(token)
-    logging.info('Finished')
+    log.info('Finished')
     sys.exit(0)
