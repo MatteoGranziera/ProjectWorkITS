@@ -13,7 +13,7 @@ import com.tsac.projectwork.dataanalyser.data.*;
 public class Analyser{
 	private int num_tweets = 10;
 	private List<Score> scoreList = new ArrayList<Score>();
-	private Map<String, String[]> languages = null;
+	private Map<String, String> languages = null;
 	
 	public void StartWorker(){
 		num_tweets = Integer.parseInt(ConfigManager.getConfig(ConfigManager.Names.NUM_TWEETS_THREAD));
@@ -67,13 +67,7 @@ public class Analyser{
 	
 	private void Analyse(Tweet t) throws JSONException{
 		for(String lang: languages.keySet()){
-		
-			for(String tag:  languages.get(lang)){
-				
-				
-				addScoreToList(scoreList, null);
-				
-			}
+			addScoreToList(scoreList, null);	
 		
 		}
 		

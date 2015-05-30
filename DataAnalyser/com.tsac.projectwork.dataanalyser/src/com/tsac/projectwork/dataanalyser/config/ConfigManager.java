@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import com.google.common.base;
 
 import com.tsac.projectwork.dataanalyser.DbWriter;
 
@@ -22,6 +23,12 @@ public class ConfigManager {
 	private static Properties properties = new Properties();
 	private static Properties jsonkeys = new Properties();
 	private static Map<String, String[]> langs = new HashMap<String, String[]>();
+	
+	//RegEx util
+	private static String REGEX_HEAD = "(\\W|^)(";
+	private static String REGEX_BOTTOM = ")(\\W|$)";
+	private static String REGEX_SPACE = "\\s";
+	private static String REGEX_SEPARATOR = "|";
 	
 	public static class Names{
 		//DbWriter names
@@ -74,7 +81,23 @@ public class ConfigManager {
 		return properties.getProperty(keyname);
 	}
 	
-	public static Map<String,String[]> getLanguages(){
-		return langs;
+	public static Map<String,String> getLanguagesRegEx(){
+		Map<String, String> regexsLang = new HashMap<String,String>();
+		
+		for(String key:langs.keySet()){
+			StringBuilder rx = new StringBuilder();
+			rx.append(REGEX_HEAD);
+			
+			for(String value : langs.get(key)){
+				rx.append(value);
+				rx.append(REGEX_SEPARATOR);
+			}
+			
+			rx.replace(rx.length() - 1, rx.length() - 1, "");
+			rx.append(REGEX_BOTTOM);
+			String result = rx.toString().replaceAll("\\s", REGEX_SPACE);
+			regexsLang.put(key, result);
+		}
+		return regexsLang;
 	}
 }
