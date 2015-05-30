@@ -2,6 +2,7 @@ package com.tsac.projectwork.dataanalyser.analyser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 
@@ -12,7 +13,7 @@ import com.tsac.projectwork.dataanalyser.data.*;
 public class Analyser{
 	private int num_tweets = 10;
 	private List<Score> scoreList = new ArrayList<Score>();
-	private String[] languages = null;
+	private Map<String, String[]> languages = null;
 	
 	public void StartWorker(){
 		num_tweets = Integer.parseInt(ConfigManager.getConfig(ConfigManager.Names.NUM_TWEETS_THREAD));
