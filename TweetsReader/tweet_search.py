@@ -3,6 +3,7 @@
 TODO:
     improve log system
     Replace states_id and languages lists with file read
+    create new dict from tweets, no deleting useless keys
 '''
 
 
@@ -48,7 +49,11 @@ def get_bearer_token(consumer_key, secret_key):
         headers={'Authorization': 'Basic {}'.format(credentials_enc.decode()), 'Content_type':ctype.encode()},
         data={'grant_type': 'client_credentials'}
     )
+<<<<<<< HEAD:TweetsReader/tweet_search.py
     #resp.raise_for_status()
+=======
+    resp.raise_for_status()
+>>>>>>> master:TweetsReader/tweet_search.py
     resp_data = resp.json()
     return resp_data['access_token']
 
@@ -74,9 +79,9 @@ def get_tweets(token):
         resp.raise_for_status()
         tweets = resp.json()
         log.info('cleaning tweets ' + str(x) + ' len: ' + str(len(tweets['statuses'])))
-        #tweets = clean_tweets(tweets['statuses'])
+        tweets = clean_tweets(tweets['statuses'])
         log.info('saving tweets')
-        #save_tweets(tweets)
+        save_tweets(tweets)
     return
 
 def clean_tweets(tweets):
