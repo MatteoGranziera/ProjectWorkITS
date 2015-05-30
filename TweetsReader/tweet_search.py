@@ -26,10 +26,10 @@ import json
 import requests
 import redis
 
-def set_logger():
+def set_logger(logentries_token):
     log = logging.getLogger('logentries')
     log.setLevel(logging.INFO)
-    log.addHandler(LogentriesHandler(os.getenv('LOGENTRIES_TOKEN')))
+    log.addHandler(LogentriesHandler(logentries_token))
     return log
 
 def get_bearer_token(consumer_key, secret_key):
@@ -49,11 +49,7 @@ def get_bearer_token(consumer_key, secret_key):
         headers={'Authorization': 'Basic {}'.format(credentials_enc.decode()), 'Content_type':ctype.encode()},
         data={'grant_type': 'client_credentials'}
     )
-<<<<<<< HEAD:TweetsReader/tweet_search.py
-    #resp.raise_for_status()
-=======
     resp.raise_for_status()
->>>>>>> master:TweetsReader/tweet_search.py
     resp_data = resp.json()
     return resp_data['access_token']
 
@@ -115,11 +111,10 @@ def save_tweets(tweets):
 
 if __name__ == '__main__':
     import os
-    import sys
     import logging
     from logentries import LogentriesHandler
     from states import states_id
-    log = set_logger()
+    log = set_logger(os.getenv('LOGENTRIES_TOKEN'))
     log.info('Started')
     log.info('getting bearer token')
     token = get_bearer_token(
