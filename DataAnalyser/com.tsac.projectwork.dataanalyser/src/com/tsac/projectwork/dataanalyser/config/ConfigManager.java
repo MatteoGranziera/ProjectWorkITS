@@ -3,8 +3,13 @@ package com.tsac.projectwork.dataanalyser.config;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+
+import com.tsac.projectwork.dataanalyser.DbWriter;
 
 
 public class ConfigManager {
@@ -16,6 +21,7 @@ public class ConfigManager {
 	//properties instances
 	private static Properties properties = new Properties();
 	private static Properties jsonkeys = new Properties();
+	private static Map<String, String[]> langs = new HashMap<String, String[]>();
 	
 	public static class Names{
 		//DbWriter names
@@ -37,12 +43,30 @@ public class ConfigManager {
 		
 		//Generic names
 		public static final String NUM_TWEETS_THREAD = "num_tweets_thread";
-		public static final String LANGUAGES = "num_tweets_thread";
 	}
 	
 	public static void LoadConfiguration() throws FileNotFoundException, IOException{
 		properties.load(new FileInputStream(CONFIG_FILE));
 		jsonkeys.load(new FileInputStream(JSON_FILE));
+		
+		//Load languages map
+		
+		try(DbWriter db = new DbWriter();){
+			db.Connect();
+			
+			langs = db.Getlanguages();
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 	}
 	
 	//keynames are stored in ConfigManager.Names
@@ -50,7 +74,7 @@ public class ConfigManager {
 		return properties.getProperty(keyname);
 	}
 	
-	public static String[] getLanguages(){
-		return properties.getProperty(Names.LANGUAGES).split(";");
+	public static Map<String,String[]> getLanguages(){
+		return langs;
 	}
 }
