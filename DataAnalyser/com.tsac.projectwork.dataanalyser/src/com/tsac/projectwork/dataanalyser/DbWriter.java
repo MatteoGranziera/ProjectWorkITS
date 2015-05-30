@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.tsac.projectwork.dataanalyser.config.ConfigManager;
 import com.tsac.projectwork.dataanalyser.data.Score;
-public class DbWriter {
+public class DbWriter implements AutoCloseable {
 	//Connection variables
 	String address = "";
 	String username = "";
@@ -97,6 +97,12 @@ public class DbWriter {
 		}
 		
 		return langs;
+	}
+
+	@Override
+	public void close() throws Exception {
+		// TODO Auto-generated method stub
+		Disconnect();
 	}
 	
 	
