@@ -76,7 +76,7 @@ public class Tweet {
 	
 	public String[] getEntities() throws JSONException{
 		if(jsonObj != null){
-			return jsonObj.getString(Keys.KEY_RETWITTED).split(",");
+			return jsonObj.getString(Keys.KEY_ENTITIES).split(",");
 		}
 		return null;
 	}
