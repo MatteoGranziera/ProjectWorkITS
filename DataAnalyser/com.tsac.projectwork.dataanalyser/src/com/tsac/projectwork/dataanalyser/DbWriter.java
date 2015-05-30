@@ -33,10 +33,10 @@ public class DbWriter {
 	
 	private int CheckIfExist(Score sc) throws SQLException{
 		int index = -1;
-		String query = "SELECT S.id, L.nome, C.nome, S.month, S.score FROM score S "
+		String query = "SELECT S.id, L.name, C.name, S.month, S.score FROM scores S "
 				+ "LEFT JOIN languages L ON L.id = S.id_language "
-				+ "LEFT JOIN country C ON C.id=S.id_country "
-				+ "WHERE C.nome = ? AND L.nome = ?";
+				+ "LEFT JOIN countries C ON C.id=S.id_country "
+				+ "WHERE C.name = ? AND L.name = ?";
 		PreparedStatement st = (PreparedStatement) db.prepareStatement(query);
 		st.setString(1, sc.getCountry());
 		st.setString(2, sc.getpLanguage());
@@ -45,9 +45,9 @@ public class DbWriter {
 		if(rs.next()){
 			index = rs.getInt(1);
 		}else{
-			query = "INSERT INTO score(id_country, id_language, score, month) VALUES ( "
-					+ "(SELECT id FROM country WHERE nome = ? ) , "
-					+ "(SELECT id FROM languages WHERE nome = ? ) , 0, ? ) RETURNING id";
+			query = "INSERT INTO scores(id_country, id_language, score, month) VALUES ( "
+					+ "(SELECT id FROM countries WHERE name = ? ) , "
+					+ "(SELECT id FROM languages WHERE name = ? ) , 0, ? ) RETURNING id";
 			st = db.prepareStatement(query);
 			st.setString(1, sc.getCountry());
 			st.setString(2, sc.getpLanguage());
@@ -66,7 +66,7 @@ public class DbWriter {
 	public void AddScore(Score sc) throws SQLException
 	{
 		int index = CheckIfExist(sc);
-		String query = "UPDATE score "
+		String query = "UPDATE scores "
 				+ "SET score = score + "+ sc.getValScore() +" "
 				+ "WHERE id = " + index;
 		Statement st = db.createStatement();
