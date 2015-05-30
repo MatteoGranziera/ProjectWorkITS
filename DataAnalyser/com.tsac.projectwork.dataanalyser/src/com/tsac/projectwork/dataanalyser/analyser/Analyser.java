@@ -66,9 +66,16 @@ public class Analyser{
 	}
 	
 	private void Analyse(Tweet t) throws JSONException{
+		for(String lang: languages.keySet()){
 		
-		//for(String )
-		addScoreToList(scoreList, null);
+			for(String tag:  languages.get(lang)){
+				
+				
+				addScoreToList(scoreList, null);
+				
+			}
+		
+		}
 		
 	}
 }
