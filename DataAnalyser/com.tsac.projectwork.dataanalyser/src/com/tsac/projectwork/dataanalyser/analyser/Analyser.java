@@ -1,5 +1,6 @@
 package com.tsac.projectwork.dataanalyser.analyser;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,16 @@ public class Analyser{
 	
 	private void Analyse(Tweet t) throws JSONException{
 		for(String lang: languages.keySet()){
-			addScoreToList(scoreList, null);	
+			if(!t.getRetweeted()){
+				if(t.getText().matches(languages.get(lang))){
+					try {
+						addScoreToList(scoreList, new Score(lang, t.getCountry(), t.getCreation(), 1 + (retw_mult * t.getNumRetweet())));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
 		
 		}
 		
