@@ -12,12 +12,14 @@ import com.tsac.projectwork.dataanalyser.data.*;
 
 public class Analyser{
 	private int num_tweets = 10;
+	private int retw_mult = 1;
 	private List<Score> scoreList = new ArrayList<Score>();
 	private Map<String, String> languages = null;
 	
 	public void StartWorker(){
 		num_tweets = Integer.parseInt(ConfigManager.getConfig(ConfigManager.Names.NUM_TWEETS_THREAD));
-		languages = ConfigManager.getLanguages();
+		retw_mult = Integer.parseInt(ConfigManager.getConfig(ConfigManager.Names.RETWEET_MULTIPLIER));
+		languages = ConfigManager.getLanguagesRegEx();
 		while(true){
 			List<Tweet> tweets = ReadTweets();
 			

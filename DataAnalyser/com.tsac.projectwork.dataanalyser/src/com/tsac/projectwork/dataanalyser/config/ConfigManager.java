@@ -49,6 +49,7 @@ public class ConfigManager {
 		
 		//Generic names
 		public static final String NUM_TWEETS_THREAD = "num_tweets_thread";
+		public static final String RETWEET_MULTIPLIER = "retweet_multiplier";
 	}
 	
 	public static void LoadConfiguration() throws FileNotFoundException, IOException{
