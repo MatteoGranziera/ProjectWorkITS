@@ -39,17 +39,24 @@ public class Analyser{
 			
 			List<Tweet> tweets = new ArrayList<Tweet>();
 			Tweet extract = null;
-			for(int i = 0; i < num_tweets && (extract = new Tweet(dbr.getNextTweet())) != null ; i++){
-				tweets.add(extract);
+			String jsontweet = dbr.getNextTweet().replaceAll("/\\/g", "\\\\");
+			
+			for(int i = 0; i < num_tweets && (jsontweet = dbr.getNextTweet()) != "NaN" ; i++){
+				try{
+					extract = new Tweet(jsontweet);
+					tweets.add(extract);
+				}catch(JSONException je){
+					je.printStackTrace();
+				}
 			}
 			
 			return tweets;
 				
-			}catch(Exception e){
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 				return null;
-				//Exception
 			}
-		
 	}
 	
 	private void addScoreToList(List<Score> lst , Score sc){
