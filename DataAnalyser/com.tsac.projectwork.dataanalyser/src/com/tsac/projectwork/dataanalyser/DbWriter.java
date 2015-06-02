@@ -26,8 +26,9 @@ public class DbWriter implements AutoCloseable {
 	public void Connect() throws ClassNotFoundException, SQLException{
 			LoadVariable();
 			Class.forName("org.postgresql.Driver");
-			db.setAutoCommit(auto_commit);
+			
 			db = DriverManager.getConnection(address, username , password);
+			db.setAutoCommit(auto_commit);
 			System.out.println(db.isClosed());
 	}
 	
@@ -87,7 +88,7 @@ public class DbWriter implements AutoCloseable {
 	public Map<String, String[]> Getlanguages() throws ClassNotFoundException, SQLException{
 		Map<String, String[]> langs = new HashMap<String, String[]>();
 		
-		String query = "SELECT L.name, L.tags FROM languages";
+		String query = "SELECT L.name, L.tags FROM languages L";
 		Statement st = db.createStatement();
 		ResultSet rs = st.executeQuery(query);
 		
