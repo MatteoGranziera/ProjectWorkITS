@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Dictionary;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +34,7 @@ public class Tweet {
 	
 	//Utils Strings
 	private String NULL_STRING = "NaN";
-	private String TWITTER_DATE="EEE, dd MMM yyyy HH:mm:ss ZZZZZ";
+	private String TWITTER_DATE="EEE MMM dd HH:mm:ss ZZZZZ yyyy";
 	
 	private JSONObject jsonObj;
 	
@@ -54,7 +55,8 @@ public class Tweet {
 	
 	public Date getCreation() throws JSONException, ParseException{
 		if(jsonObj != null){
-			SimpleDateFormat sf = new SimpleDateFormat(TWITTER_DATE);
+			SimpleDateFormat sf = new SimpleDateFormat(TWITTER_DATE, Locale.ENGLISH);
+			sf.setLenient(true);
 			return new Date(sf.parse(jsonObj.getString(Keys.KEY_CREATION)).getTime());
 		}
 		return null;
