@@ -31,12 +31,12 @@ namespace Projectwork.db.data
 
                 string query = @"
 SELECT score.id
-      ,country.nome as cname
-      ,languages.nome as lname
-      ,score
+      ,countries.name as cname
+      ,languages.name as lname
+      ,score 
       ,month
   FROM score
-  LEFT JOIN country ON country.id = score.id_country
+  LEFT JOIN countries ON countries.id = score.id_country
   LEFT JOIN languages ON languages.id = score.id_language";
 
 
@@ -50,8 +50,8 @@ SELECT score.id
 
                     if (sc.namecountry != "Nan")
                     {
-                        command.CommandText += " WHERE country.nome = @nomecountry ";
-                        command.Parameters.Add(new NpgsqlParameter("@nomecountry", sc.namecountry));
+                        command.CommandText += " WHERE countries.name = @namecountry ";
+                        command.Parameters.Add(new NpgsqlParameter("@namecountry", sc.namecountry));
                         where = true;
                     }
 
@@ -65,8 +65,8 @@ SELECT score.id
                         {
                             command.CommandText += " WHERE";
                         }
-                        command.CommandText += " languages.nome = @nomelanguage ";
-                        command.Parameters.Add(new NpgsqlParameter("@nomelanguage", sc.namelanguage));
+                        command.CommandText += " languages.name = @namelanguage ";
+                        command.Parameters.Add(new NpgsqlParameter("@namelanguage", sc.namelanguage));
                     }
 
                     if (sc.month != new DateTime(1800, 1, 1))
@@ -82,16 +82,31 @@ SELECT score.id
                         command.CommandText += " score.month = @scoremonth ";
                         command.Parameters.Add(new NpgsqlParameter("@scoremonth", sc.month));
                     }
+                    if (sc.order != "Nan")
+                    {
+                        command.CommandText += " ORDER BY " + sc.order;
+                        
 
-                    command.CommandText += " ORDER BY score DESC ";
+                        if (sc.desc)
+                        {
+                            command.CommandText += " DESC";
+                        }
+                        else
+                        {
+                            command.CommandText += " ASC";
+                        }
 
-                    if (limit!= null && limit > 0)
+                    }
+
+
+                    if (limit != null && limit > 0)
                     {
                         command.CommandText += " LIMIT @limit";
                         command.Parameters.Add(new NpgsqlParameter("@limit", limit));
                     }
 
-                    
+
+
 
 
                     NpgsqlDataReader reader = command.ExecuteReader();
@@ -115,12 +130,43 @@ SELECT score.id
             }
 
         }
+
+
+        public List<String> GetLanguages()
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = @"
+SELECT name FROM languages ORDER BY name";
+
+                using (NpgsqlCommand command = connection.CreateCommand())
+                {
+                    command.CommandText = query;
+                    command.CommandType = CommandType.Text;
+
+
+
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    List<String> Languages = new List<String>();
+
+                    while (reader.Read())
+                    {
+                        Languages.Add(reader["name"].ToString());
+                    }
+                    return Languages;
+                }
+
+            }
+        }
     }
 }
 
-       
-        
-        
+
+
+
 
 
 

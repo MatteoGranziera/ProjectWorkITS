@@ -13,10 +13,6 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        public ActionResult ProvaDatabase()
-        {
-            return View();
-        }
 
         public ActionResult Aboutus()
         {

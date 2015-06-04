@@ -2,9 +2,9 @@
 
 
 CREATE SEQUENCE sequence_country START 1;
-CREATE TABLE country (
+CREATE TABLE countries (
 id integer DEFAULT nextval('sequence_country'),
-nome varchar(30),
+name varchar(30),
 PRIMARY KEY (id));
 
 
@@ -13,7 +13,7 @@ PRIMARY KEY (id));
 CREATE SEQUENCE sequence_languages START 1;
 CREATE TABLE languages (
 id integer DEFAULT nextval('sequence_languages'),
-nome varchar(30),
+name varchar(30),
 PRIMARY KEY (id));
 
 
@@ -29,5 +29,5 @@ id_language integer,
 score integer,
 month date, 					--first day of the month
 PRIMARY KEY (id_country, id_language),
-FOREIGN KEY(id_country) REFERENCES country(id),
+FOREIGN KEY(id_country) REFERENCES countries(id),
 FOREIGN KEY(id_language) REFERENCES languages(id));

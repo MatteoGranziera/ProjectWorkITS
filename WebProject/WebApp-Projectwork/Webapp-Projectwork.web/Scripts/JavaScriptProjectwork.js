@@ -6,12 +6,12 @@ $(function () {
         $(this).mouseenter(function () {
 
             $.ajax({
-                url: '/api/Finalscore?country=' + $(this).children().text() + '&limit=4',
+                url: '/api/Finalscore?country=' + $(this).children().text() + '&order=score&desc=true&limit=4',
                 type: 'GET',
                 dataType: 'json'
             }).done(function (data) {
                 var html = '';
-                if (data != undefined) {
+                if (data != undefined||data.length()>0) {
                     html = '<h3 id="statetitle">' + data[0].namecountry + '</h3><table border="1" id="table"><tr><td id="titolotab">Language</td><td id="titolotab">Score</td></tr>';
                     for (var i = 0; i < data.length; i++) {
                         var resultcountry = data[i];

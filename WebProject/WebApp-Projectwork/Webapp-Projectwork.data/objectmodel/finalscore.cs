@@ -13,6 +13,9 @@ namespace Projectwork.db.data.objectmodel
         public string namelanguage { get; set; }
         public int score { get; set; }
         public DateTime month { get; set; }
+        public string order { get; set; }
+        public bool desc { get; set; }
+
 
     }
 }

@@ -13,16 +13,19 @@ namespace WebApplication1.Controllers
     public class FinalscoreController : ApiController
     {
 
-        public IHttpActionResult Get(string country, int? limit=-1)
+        public IHttpActionResult Get(string country=null , int? m = null, int? y = null, string lang=null, string order=null, bool? desc=null, int? limit = -1)
         {
             DataAccess data = new DataAccess();
             Finalscore fsc = new Finalscore()
             {
                 id= -1,
-                namecountry = country,
-                namelanguage = "Nan",
-                month = new DateTime(1800, 1, 1),
-                score = -1
+                namecountry = (country!= null?country:"Nan"),
+                namelanguage = (lang!= null?lang:"Nan"),
+                month = (m != null&& y != null?new DateTime((int)y, (int)m+1, 1):new DateTime(1800, 1, 1)),
+                score = -1,
+                order = (order!= null?order:"Nan"),
+                desc = (desc != null?(bool)desc : false)
+
             };
 
             var products = data.GetFinalscore(fsc, limit);
@@ -35,10 +38,13 @@ namespace WebApplication1.Controllers
                 finalscore.namecountry = item.namecountry;
                 finalscore.namelanguage = item.namelanguage;
                 finalscore.score = item.score;
+                finalscore.month = item.month;
 
                 result.Add(finalscore);
             }
             return Ok(result);
         }
+
+       
     }
 }
