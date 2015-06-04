@@ -8,8 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import com.tsac.projectwork.dataanalyser.DbWriter;
+import com.tsac.projectwork.dataanalyser.data.Tweet;
 
 
 public class ConfigManager {
@@ -42,7 +44,7 @@ public class ConfigManager {
 		//JSON tag names
 		public static final String JSON_KEY_TEXT = "key_text";
 		public static final String JSON_KEY_CREATION = "key_creation"; 
-		public static final String JSON_KEY_RETWITTED = "key_retwitted"; 
+		public static final String JSON_KEY_RETWEETED = "key_retweeted"; 
 		public static final String JSON_KEY_ENTITIES = "key_entities"; 
 		public static final String JSON_KEY_RETWEET_COUNT = "key_retweet_count"; 
 		public static final String JSON_KEY_COUNTRY = "key_country"; 
@@ -55,6 +57,7 @@ public class ConfigManager {
 	public static void LoadConfiguration() throws FileNotFoundException, IOException{
 		properties.load(new FileInputStream(CONFIG_FILE));
 		jsonkeys.load(new FileInputStream(JSON_FILE));
+		Tweet.Keys.LoadKeys();
 		
 		//Load languages map
 		
@@ -97,7 +100,7 @@ public class ConfigManager {
 				rx.append(REGEX_SEPARATOR);
 			}
 			
-			rx.replace(rx.length() - 1, rx.length() - 1, "");
+			rx.replace(rx.length() - 1, rx.length(), "");
 			rx.append(REGEX_BOTTOM);
 			String result = rx.toString().replaceAll("\\s", REGEX_SPACE);
 			regexsLang.put(key, result);
