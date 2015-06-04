@@ -1,6 +1,22 @@
 ﻿#provadati{
+  margin-top: 20px;
   height: 750px;
   border-right-color: #484643;
   border-right: 1px solid;
   box-shadow:  10px  -10px 2px #cacaca;
+  font-size: 1.5em;
+}
+
+#table{
+    margin-top: 20px;
+    width: 100%;
+    text-align:center;
+
+}
+#titolotab{
+    color: #c02121;
+}
+
+#statetitle{
+    text-align: center;
 }

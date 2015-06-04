@@ -10,7 +10,7 @@
                 <div id="dati"></div>
             </div>
             <div id="map-europe" class="col-xs-9">
-                <ul class="europe">
+                <ul class="europe" id="ul">
 
                     <li class="eu3"><a href="Country/ViewC?c=Austria">Austria</a></li>
                     <li class="eu5"><a href="Country/ViewC?c=Belgium">Belgium</a></li>
@@ -22,7 +22,7 @@
                     <li class="eu12"><a href="Country/ViewC?c=Estonia">Estonia</a></li>
                     <li class="eu13"><a href="Country/ViewC?c=France">France</a></li>
                     <li class="eu14"><a href="Country/ViewC?c=Finland">Finland</a></li>
-                    <li class="eu16"><a href="Country/ViewC?c=germania">Germany</a></li>
+                    <li class="eu16"><a href="Country/ViewC?c=germania">germania</a></li>
                     <li class="eu17"><a href="Country/ViewC?c=Greece">Greece</a></li>
                     <li class="eu18"><a href="Country/ViewC?c=Hungary">Hungary</a></li>
                     <li class="eu20"><a href="Country/ViewC?c=Ireland">Ireland</a></li>
@@ -44,11 +44,12 @@
             </div>
         </div>
     </div>
+    
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
     <script type="text/javascript" src="http://cssmapsplugin.com/4/jquery.cssmap.js"></script>
     <script src="~/Scripts/JavaScriptProjectwork.js"></script>
-
-    <script type="text/javascript">
+   
+     <script type="text/javascript">
         $(function ($) {
             $('#map-europe').cssMap({ 'size': 960 });
         });
