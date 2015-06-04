@@ -15,18 +15,18 @@ public class Tweet {
 	public static class Keys{
 		private static String KEY_TEXT = "";
 		private static String KEY_CREATION = "";
-		private static String KEY_RETWITTED = "";
+		private static String KEY_RETWEETED = "";
 		private static String KEY_ENTITIES = "";
 		private static String KEY_RETWEET_COUNT = "";
 		private static String KEY_COUNTRY = "";
 		
 		public static void LoadKeys(){
-			KEY_TEXT = ConfigManager.getConfig(ConfigManager.Names.JSON_KEY_TEXT);
-			KEY_CREATION = ConfigManager.getConfig(ConfigManager.Names.JSON_KEY_CREATION);
-			KEY_RETWITTED = ConfigManager.getConfig(ConfigManager.Names.JSON_KEY_RETWITTED);
-			KEY_ENTITIES = ConfigManager.getConfig(ConfigManager.Names.JSON_KEY_ENTITIES);
-			KEY_RETWEET_COUNT = ConfigManager.getConfig(ConfigManager.Names.JSON_KEY_RETWEET_COUNT);
-			KEY_COUNTRY = ConfigManager.getConfig(ConfigManager.Names.JSON_KEY_COUNTRY);
+			KEY_TEXT = ConfigManager.getJSONkey(ConfigManager.Names.JSON_KEY_TEXT);
+			KEY_CREATION = ConfigManager.getJSONkey(ConfigManager.Names.JSON_KEY_CREATION);
+			KEY_RETWEETED = ConfigManager.getJSONkey(ConfigManager.Names.JSON_KEY_RETWEETED);
+			KEY_ENTITIES = ConfigManager.getJSONkey(ConfigManager.Names.JSON_KEY_ENTITIES);
+			KEY_RETWEET_COUNT = ConfigManager.getJSONkey(ConfigManager.Names.JSON_KEY_RETWEET_COUNT);
+			KEY_COUNTRY = ConfigManager.getJSONkey(ConfigManager.Names.JSON_KEY_COUNTRY);
 		}
 	}
 	
@@ -62,7 +62,7 @@ public class Tweet {
 	
 	public boolean getRetweeted() throws JSONException{
 		if(jsonObj != null){
-			return  jsonObj.getBoolean(Keys.KEY_RETWITTED);
+			return  jsonObj.getBoolean(Keys.KEY_RETWEETED);
 		}
 		return false;
 	}
