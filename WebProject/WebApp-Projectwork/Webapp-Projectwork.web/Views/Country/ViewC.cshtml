@@ -3,7 +3,7 @@
     ViewBag.Title = "ViewC";
 }
 
-<h2>ViewC</h2>
+<h2>What is the language used more?</h2>
 <div id="pnl"></div>
 @section scripts{
 <script type="text/javascript">
@@ -17,9 +17,11 @@
         for (var i = 0; i < data.length; i++) {
             var resultcountry = data[i];
 
-            html = html + '<h3>' + resultcountry.namecountry + " " + resultcountry.namelanguage + " " + resultcountry.score + '</h3><br/>';
+            html = html + '<h3>' + resultcountry.namelanguage + " " + resultcountry.score + '</h3><br/>';
 
         }
+
+        html = html + '<h4><a href="/Home/Index">Return Home</a><br/></h4>';
 
         $('#pnl').html(html);
     }).error(function (e) {
@@ -27,3 +29,7 @@
     })
 </script>
 }
+
+
+
+

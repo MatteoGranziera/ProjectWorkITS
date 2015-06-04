@@ -23,7 +23,7 @@ namespace Projectwork.db.data
             this.connectionString = ConfigurationManager.ConnectionStrings["cs"].ConnectionString;
         }
 
-        public IEnumerable<Finalscore> GetFinalscore(Finalscore sc)
+        public IEnumerable<Finalscore> GetFinalscore(Finalscore sc, int? limit)
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
@@ -83,6 +83,17 @@ SELECT score.id
                         command.Parameters.Add(new NpgsqlParameter("@scoremonth", sc.month));
                     }
 
+                    command.CommandText += " ORDER BY score DESC ";
+
+                    if (limit!= null && limit > 0)
+                    {
+                        command.CommandText += " LIMIT @limit";
+                        command.Parameters.Add(new NpgsqlParameter("@limit", limit));
+                    }
+
+                    
+
+
                     NpgsqlDataReader reader = command.ExecuteReader();
 
                     List<Finalscore> Scores = new List<Finalscore>();
@@ -95,7 +106,7 @@ SELECT score.id
                         finalscore.namecountry = reader["cname"] as string;
                         finalscore.namelanguage = reader["lname"] as string;
                         finalscore.score = (int)reader["score"];
-                        finalscore.month = DateTime.ParseExact(reader["month"].ToString(), "dd/MM/yyyy hh:mm:ss" , CultureInfo.InvariantCulture);
+                        finalscore.month = DateTime.ParseExact(reader["month"].ToString(), "dd/MM/yyyy hh:mm:ss", CultureInfo.InvariantCulture);
 
                         Scores.Add(finalscore);
                     }
@@ -103,51 +114,13 @@ SELECT score.id
                 }
             }
 
-        }
-
-        public IEnumerable<Finalscore> GetFinalscore()
-        {
-            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
-            {
-                connection.Open();
-
-                string query = @"
-SELECT id
-      ,id_country
-      ,id_language
-      ,score
-      ,month
-  FROM score
-  LEFT JOIN country ON country.id = id_country.score
-  LEFT JOIN language ON language.id = id_language.score";
-
-                using (NpgsqlCommand command = connection.CreateCommand())
-                {
-                    command.CommandText = query;
-                    command.CommandType = CommandType.Text;
-
-                    NpgsqlDataReader reader = command.ExecuteReader();
-
-                    List<Finalscore> Scores = new List<Finalscore>();
-
-                    while (reader.Read())
-                    {
-                        Finalscore finalscore = new Finalscore();
-
-                        finalscore.id = (int)reader["id"];
-                        finalscore.namecountry = reader["nome"] as string;
-                        finalscore.namelanguage = reader["nome"] as string;
-                        finalscore.score = (int)reader["score"];
-                        //finalscore.month = ["month"] as DateTime;
-
-                        Scores.Add(finalscore);
-                    }
-                    return Scores;
-                }
-            }
         }
     }
 }
+
+       
+        
+        
 
 
 

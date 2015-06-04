@@ -12,7 +12,8 @@ namespace WebApplication1.Controllers
 {
     public class FinalscoreController : ApiController
     {
-        public IHttpActionResult Get(string country)
+
+        public IHttpActionResult Get(string country, int? limit=-1)
         {
             DataAccess data = new DataAccess();
             Finalscore fsc = new Finalscore()
@@ -24,7 +25,7 @@ namespace WebApplication1.Controllers
                 score = -1
             };
 
-            var products = data.GetFinalscore(fsc);
+            var products = data.GetFinalscore(fsc, limit);
 
             List<FinalscoreModel> result = new List<FinalscoreModel>();
             foreach (var item in products)

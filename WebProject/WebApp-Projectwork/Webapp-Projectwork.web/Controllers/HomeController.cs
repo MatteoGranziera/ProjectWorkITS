@@ -31,5 +31,11 @@ namespace WebApplication1.Controllers
 
             return View();
         }
+        
+        public ActionResult ViewC(string c)
+        {
+            ViewBag.Country = c;
+            return View();
+        }
     }
 }
