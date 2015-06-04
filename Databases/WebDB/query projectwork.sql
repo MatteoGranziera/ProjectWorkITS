@@ -5,6 +5,7 @@ CREATE SEQUENCE sequence_countries START 1;
 CREATE TABLE countries (
 	id integer DEFAULT nextval('sequence_countries'),
 	name varchar(30),
+	id_state_twitter varchar(17),
 	PRIMARY KEY (id)
 );
 
