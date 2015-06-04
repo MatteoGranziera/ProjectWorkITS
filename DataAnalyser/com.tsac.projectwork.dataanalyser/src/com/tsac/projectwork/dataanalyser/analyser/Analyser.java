@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import org.json.JSONException;
 
 import com.tsac.projectwork.dataanalyser.DbReader;
+import com.tsac.projectwork.dataanalyser.DbWriter;
 import com.tsac.projectwork.dataanalyser.config.ConfigManager;
 import com.tsac.projectwork.dataanalyser.data.*;
 
@@ -91,6 +92,18 @@ public class Analyser{
 				}
 			}
 		}
+		
+		try(DbWriter dbw = new DbWriter();){
+			dbw.Connect();
+			for(Score sc : scoreList){
+				dbw.AddScore(sc);
+			}
+			dbw.DoCommit();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 	}
 }
