@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 
@@ -32,6 +33,8 @@ public class Analyser{
 					e.printStackTrace();
 				}
 			}
+			
+			
 		}
 	}
 	
@@ -42,9 +45,9 @@ public class Analyser{
 			
 			List<Tweet> tweets = new ArrayList<Tweet>();
 			Tweet extract = null;
-			String jsontweet = dbr.getNextTweet().replaceAll("/\\/g", "\\\\");
+			String jsontweet = dbr.getNextTweet().replaceAll("[\\\\].", "");
 			
-			for(int i = 0; i < num_tweets && (jsontweet = dbr.getNextTweet()) != "NaN" ; i++){
+			for(int i = 0; i < num_tweets && (jsontweet = dbr.getNextTweet().replaceAll("[\\\\].", "")) != "NaN" ; i++){
 				try{
 					extract = new Tweet(jsontweet);
 					tweets.add(extract);
@@ -78,7 +81,7 @@ public class Analyser{
 	private void Analyse(Tweet t) throws JSONException{
 		for(String lang: languages.keySet()){
 			if(!t.getRetweeted()){
-				if(t.getText().matches(languages.get(lang))){
+				if(Pattern.compile(languages.get(lang), Pattern.CASE_INSENSITIVE).matcher(t.getText()).find()){
 					try {
 						addScoreToList(scoreList, new Score(lang, t.getCountry(), t.getCreation(), 1 + (retw_mult * t.getNumRetweet())));
 					} catch (ParseException e) {
@@ -87,7 +90,6 @@ public class Analyser{
 					}
 				}
 			}
-		
 		}
 		
 	}
