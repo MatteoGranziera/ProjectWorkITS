@@ -23,6 +23,7 @@ public class DbReader implements AutoCloseable{
 	public String getNextTweet(){
 		if(conn!= null && conn.isConnected()){
 			return conn.lpop(ConfigManager.getConfig(ConfigManager.Names.DBREADER_QUEUE_NAME));
+			//return "{'text':'#Python, is java beacuse python is #Java','created_at':'Wed Aug 27 13:08:45 +0000 2015','retweeted':'False','hashtags':[],'retweet_count':'0','state':'Italy'}";
 		}
 		else
 			return "NaN";

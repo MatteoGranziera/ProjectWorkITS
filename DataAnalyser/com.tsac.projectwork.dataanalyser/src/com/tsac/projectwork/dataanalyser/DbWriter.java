@@ -92,7 +92,6 @@ public class DbWriter implements AutoCloseable {
 		Statement st = db.createStatement();
 		ResultSet rs = st.executeQuery(query);
 		
-		
 		while(rs.next()){
 			langs.put(rs.getString("name"), rs.getString("tags").split(","));
 		}
