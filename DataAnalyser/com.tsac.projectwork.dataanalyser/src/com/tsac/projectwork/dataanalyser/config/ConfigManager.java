@@ -81,6 +81,10 @@ public class ConfigManager {
 		return properties.getProperty(keyname);
 	}
 	
+	public static String getJSONkey(String keyname){
+		return jsonkeys.getProperty(keyname);
+	}
+	
 	public static Map<String,String> getLanguagesRegEx(){
 		Map<String, String> regexsLang = new HashMap<String,String>();
 		
