@@ -189,7 +189,6 @@
     <Content Include="Views\Home\AboutITSKennedy.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-    <Content Include="Views\Home\ProvaDatabase.cshtml" />
     <Content Include="Views\Country\ViewC.cshtml" />
   </ItemGroup>
   <ItemGroup>
