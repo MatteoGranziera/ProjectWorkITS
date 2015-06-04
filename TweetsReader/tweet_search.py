@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 '''
 TODO:
-    improve log system
-    Replace states_id and languages lists with file read
     create new dict from tweets, no deleting useless keys
 '''
 
@@ -27,11 +25,46 @@ import requests
 import redis
 
 def set_logger(logentries_token):
+    '''
+    Parameters:
+        logentries_token: logentries access token
+    Returns:
+        log: logger
+    '''
     log = logging.getLogger('logentries')
     log.setLevel(logging.INFO)
     log.addHandler(LogentriesHandler(logentries_token))
     return log
 
+def get_db_datas(choice):
+    '''
+    Parameters:
+        choice: 'states' or 'languages'
+    Returns:
+        data: data we need
+    '''
+    conn = psycopg2.connect(user='projectwork', password='password!',
+                            dbname='projectwork', host='54.72.51.122',
+                            port=5432)
+    curs = conn.cursor()
+    if choice == 'states':
+        curs.execute(
+            'SELECT name, id_state_twitter FROM countries'
+            )
+        data = {}
+        for chunk in curs.fetchall():
+            data[chunk[0]] = chunk[1]
+    elif choice == 'languages':
+        data = []
+        curs.execute(
+            'SELECT name FROM languages'
+            )
+        data = curs.fetchall()
+    conn.commit()
+    curs.close()
+    conn.close()
+    return data
+    
 def get_token(consumer_key, secret_key):
     '''
     Parameters:
@@ -59,21 +92,19 @@ def get_tweets(token, conn):
         word: the query to make to search API
         token: the key we need to authenticate requests
     Returns:
-      a list of tweets (dictionaries) as returned by twitter API
+        a list of tweets (dictionaries) as returned by twitter API
     '''
+    states = get_db_datas('states')
+    languages = get_db_datas('languages')
+
     x = 0
-    for state in states_id.values():
+    for state in states.values():
         x += 1
-        '''resp = requests.get(
-                                    'https://api.twitter.com/1.1/search/tweets.json',
-                                    params={'q':'place:{} {}'.format(state, languages), 'count':100},
-                                    headers={'Authorization': 'Bearer {}'.format(token)}
-                                    )'''
         resp = requests.get(
-                        'https://api.twitter.com/1.1/search/tweets.json',
-                        params={'q':'place:{} {}'.format(state, '#java OR #python'), 'count':100},
-                        headers={'Authorization': 'Bearer {}'.format(token)}
-                        )
+                            'https://api.twitter.com/1.1/search/tweets.json',
+                            params={'q':'place:{} {}'.format(state, languages), 'count':100},
+                            headers={'Authorization': 'Bearer {}'.format(token)}
+                            )
         resp.raise_for_status()
         tweets = resp.json()
         log.info('cleaning tweets ' + str(x) + ' len: ' + str(len(tweets['statuses'])))
@@ -84,9 +115,15 @@ def get_tweets(token, conn):
     return
 
 def clean_tweets(tweets):
-    #keys not to cancel: text, created_at, place
+    '''
+    Parameters:
+        tweets: list of tweets        
+    Returns:
+        tweets: list of cleaned tweets
+    '''
     cleaned = []
-    whitelist = ['text', 'created_at']
+    whitelist = ['text', 'created_at', 'retweeted', 'retweet_count',]
+    '''
     words = ['metadata', 'id', 'favorite_count', 'possibly_sensitive', 'source', 'geo', 'in_reply_to_status_id_str', 
     'in_reply_to_status_id', 'in_reply_to_user_id', 'user', 'truncated', 'in_reply_to_user_id_str', 'in_reply_to_screen_name', 
     'contributors', 'lang', 'coordinates', 'entities', 'retweeted_status', 'id_str', 'favorited', 'place']
@@ -108,17 +145,21 @@ def clean_tweets(tweets):
                 new[word] = tweet[word]
             if tweet['place']['country'] != None:
                 new['state'] = tweet['place']['country']
-            if int(['entities']['hashtags']) != None:
-                new['hashtags'] = tweet['entities']['hashtags']
-        #print(new)
+            #if int(['entities']['hashtags']) != None:
+            #    new['hashtags'] = tweet['entities']['hashtags']
+        print(new)
         cleaned.append(new)
     return cleaned
-    '''
-    return tweets
+    #return tweets
 
-def get_connection():
-    #host = '54.72.51.122'
-    host = '192.168.101.41'
+def get_redis_connection():
+    '''
+    Parameters:
+        None
+    Returns:
+        conn: redis connection resource
+    '''
+    host = '54.72.51.122'
     port = 6379
     db = 0
     POOL = redis.ConnectionPool(host = host, port = port, db = db)
@@ -129,6 +170,8 @@ def save_tweets(tweets, conn):
     '''
     Parameters:
         tweets: a list of tweets to put in redis queue
+    Returns:
+        None
     '''
     for tweet in tweets:
         redis.Redis.rpush(conn, 'tweets', tweet)
@@ -139,17 +182,17 @@ if __name__ == '__main__':
     import sys
     import logging
     from logentries import LogentriesHandler
-    from states import states_id
-    from languages import languages
-    log = set_logger(os.getenv('LOGENTRIES_TOKEN'))
+    import psycopg2
+    log = set_logger(os.getenv('PROJECTWORK_LOGENTRIES_TOKEN'))
     log.info('Started')
     log.info('getting bearer token')
     token = get_token(
         os.getenv('TWITTER_API_PKEY'),
         os.getenv('TWITTER_API_SECRET')
         )
+    log.info('Getting redis connection')
+    conn = get_redis_connection()
     log.info('Getting tweets')
-    conn = get_connection()
     tweets = get_tweets(token, conn)   
     log.info('Finished')
     sys.exit(0)
