@@ -2,8 +2,8 @@ package com.tsac.projectwork.dataanalyser.data;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Dictionary;
-import java.util.List;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.json.JSONException;
@@ -35,6 +35,7 @@ public class Tweet {
 	//Utils Strings
 	private String NULL_STRING = "NaN";
 	private String TWITTER_DATE="EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+	private Calendar calendar = GregorianCalendar.getInstance();
 	
 	private JSONObject jsonObj;
 	
@@ -57,7 +58,9 @@ public class Tweet {
 		if(jsonObj != null){
 			SimpleDateFormat sf = new SimpleDateFormat(TWITTER_DATE, Locale.ENGLISH);
 			sf.setLenient(true);
-			return new Date(sf.parse(jsonObj.getString(Keys.KEY_CREATION)).getTime());
+			calendar.setTime(sf.parse(jsonObj.getString(Keys.KEY_CREATION)));
+			calendar.add(Calendar.DAY_OF_MONTH , -1 * ( calendar.get(Calendar.DAY_OF_MONTH) - 1 ));
+			return new Date(calendar.getTime().getTime());
 		}
 		return null;
 	}
