@@ -98,19 +98,19 @@ def get_tweets(token, conn):
     '''
     states = get_db_datas('states')
     #languages = get_db_datas('languages')
-    languages = '"ASP.NET" OR "C" OR "C++" OR Delphi OR "C#" OR Fortran OR Haskell OR HTML OR Go OR Java OR Javascript OR "Objective-C" OR Perl OR PHP OR Python OR Ruby OR Scala OR SQL OR Swift OR "Visual Basic"'
-
-    x = 0
+    from languages import lang
+    x = ''
+    for l in lang:
+        x += '"' + l + '"' + " OR "
+    lang = x
     for state in states.values():
-        x += 1
         resp = requests.get(
                             'https://api.twitter.com/1.1/search/tweets.json',
-                            params={'q':'place:{} {}'.format(state, languages), 'count':100},
+                            params={'q':'place:{} {}'.format(state, lang), 'count':100},
                             headers={'Authorization': 'Bearer {}'.format(token)}
                             )
         resp.raise_for_status()
         tweets = resp.json()
-        log.info('cleaning tweets ' + str(x) + ' len: ' + str(len(tweets['statuses'])))
         tweets = clean_tweets(tweets['statuses'])
         log.info('saving tweets')
         save_tweets(tweets, conn)
