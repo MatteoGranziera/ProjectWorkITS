@@ -17,7 +17,7 @@ import com.tsac.projectwork.dataanalyser.data.Tweet;
 public class ConfigManager {
 	
 	//path of the configs files
-	private static String CONFIG_FILE = "properties.config";
+	private static String CONFIG_FILE = "properties.config.remote";
 	private static String JSON_FILE = "JSONKeys.config";
 	
 	//properties instances
