@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "ViewC";
 }
-<h2>What is the most popular language here in @ViewBag.Country?</h2>
+<h2>What is the programming language most used here in @ViewBag.Country?</h2>
 <div id="pnl"></div>
 <div class="row">
     <div class="col-md-4" id="legend"></div>
@@ -19,7 +19,7 @@
     <script src="~/Scripts/randomcolor.js"></script>
     <script src="~/Scripts/legend.js"></script>
     <script type="text/javascript">
-        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dic"];
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         var myLineChart;
         var arrayLanguage = [];
         function loaddata(time, m) {
@@ -96,7 +96,8 @@
 
     </script>
 }
-
+<br />
+<a href="/Home/Index">Return Home</a>
 
 
 

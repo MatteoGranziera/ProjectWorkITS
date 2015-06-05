@@ -157,6 +157,7 @@
     <Content Include="Content\images\10372061_496384247128288_4036151690616562488_n.jpg" />
     <Content Include="Content\images\1610869_10200122367298270_881745210088200308_n.jpg" />
     <Content Include="Content\images\891604_371485939650869_1418507247_o.jpg" />
+    <Content Include="Content\images\download.png" />
     <Content Include="Content\StyleSheetProjectwork.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -183,7 +184,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

@@ -22,11 +22,13 @@
 }
 
 .legend {
-    width: 10em;
-    border: 1px solid black;
+    height:50px;
 }
 
     .legend .title {
+
+        width:100px;
+        float:left;
         display: block;
         margin-bottom: 0.5em;
         line-height: 1.2em;
