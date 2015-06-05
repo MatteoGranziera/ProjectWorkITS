@@ -30,14 +30,14 @@ namespace Projectwork.db.data
                 connection.Open();
 
                 string query = @"
-SELECT score.id
+SELECT scores.id
       ,countries.name as cname
       ,languages.name as lname
       ,score 
       ,month
-  FROM score
-  LEFT JOIN countries ON countries.id = score.id_country
-  LEFT JOIN languages ON languages.id = score.id_language";
+  FROM scores
+  LEFT JOIN countries ON countries.id = scores.id_country
+  LEFT JOIN languages ON languages.id = scores.id_language";
 
 
 
@@ -79,7 +79,7 @@ SELECT score.id
                         {
                             command.CommandText += " WHERE";
                         }
-                        command.CommandText += " score.month = @scoremonth ";
+                        command.CommandText += " scores.month = @scoremonth ";
                         command.Parameters.Add(new NpgsqlParameter("@scoremonth", sc.month));
                     }
                     if (sc.order != "Nan")
