@@ -130,36 +130,56 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\countryController.cs" />
+    <Compile Include="Controllers\CountryController.cs" />
+    <Compile Include="Controllers\FinalscoreController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\languageController.cs" />
-    <Compile Include="Controllers\scoreController.cs" />
+    <Compile Include="Controllers\LanguagesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\countryModel.cs" />
-    <Compile Include="Models\languageModel.cs" />
-    <Compile Include="Models\scoreModel.cs" />
+    <Compile Include="Models\FinalscoreModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\cssmap-europe\cssmap-europe.css" />
+    <Content Include="Content\cssmap-europe\eu-1280.png" />
+    <Content Include="Content\cssmap-europe\eu-1450.png" />
+    <Content Include="Content\cssmap-europe\eu-250.png" />
+    <Content Include="Content\cssmap-europe\eu-320.png" />
+    <Content Include="Content\cssmap-europe\eu-430.png" />
+    <Content Include="Content\cssmap-europe\eu-540.png" />
+    <Content Include="Content\cssmap-europe\eu-650.png" />
+    <Content Include="Content\cssmap-europe\eu-750.png" />
+    <Content Include="Content\cssmap-europe\eu-850.png" />
+    <Content Include="Content\cssmap-europe\eu-960.png" />
+    <Content Include="Content\images\10372061_496384247128288_4036151690616562488_n.jpg" />
+    <Content Include="Content\images\1610869_10200122367298270_881745210088200308_n.jpg" />
+    <Content Include="Content\images\891604_371485939650869_1418507247_o.jpg" />
+    <Content Include="Content\StyleSheetProjectwork.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\ProjectworkTW - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\ProjectworkTW - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\JavaScriptProjectwork.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.cssmap.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\legend.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\randomcolor.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
@@ -174,14 +194,16 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Aboutus.cshtml" />
+    <Content Include="Views\Home\AboutITSKennedy.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-    <Content Include="Views\Home\ProvaDatabase.cshtml" />
+    <Content Include="Views\Country\ViewC.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Languages\" />
+    <Folder Include="Views\Language\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

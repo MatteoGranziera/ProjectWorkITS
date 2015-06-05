@@ -47,9 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dataaccess.cs" />
-    <Compile Include="objectmodel\country.cs" />
-    <Compile Include="objectmodel\language.cs" />
-    <Compile Include="objectmodel\score.cs" />
+    <Compile Include="objectmodel\Finalscore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

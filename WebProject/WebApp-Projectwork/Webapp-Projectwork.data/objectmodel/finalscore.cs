@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 
 namespace Projectwork.db.data.objectmodel
 {
-    public class score
+    public class Finalscore
     {
         public int id { get; set; }
-        public int final_score  { get; set; }
+        public string namecountry { get; set; }
+        public string namelanguage { get; set; }
+        public int score { get; set; }
         public DateTime month { get; set; }
+        public string order { get; set; }
+        public bool desc { get; set; }
 
 
     }
