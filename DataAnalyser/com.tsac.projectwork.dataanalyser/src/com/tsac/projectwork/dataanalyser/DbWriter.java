@@ -61,11 +61,11 @@ public class DbWriter implements AutoCloseable {
 			index = rs.getInt(1);
 		}else{
 			query = "INSERT INTO scores(id_country, id_language, score, month) VALUES ( "
-					+ "(SELECT id FROM countries WHERE name = ? ) , "
-					+ "(SELECT id FROM languages WHERE id_state_twitter = ? ) , 0, ? ) RETURNING id";
+					+ "(SELECT id FROM countries WHERE id_state_twitter = ? ) , "
+					+ "(SELECT id FROM languages WHERE name = ? ) , 0, ? ) RETURNING id";
 			st = db.prepareStatement(query);
-			st.setString(1, sc.getpLanguage());
-			st.setString(2, sc.getCountry());
+			st.setString(1, sc.getCountry());
+			st.setString(2, sc.getpLanguage());
 			st.setDate(3, (Date) sc.getMonth());
 			rs = st.executeQuery();
 			rs.next();
