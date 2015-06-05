@@ -10,12 +10,16 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import com.tsac.projectwork.dataanalyser.DbWriter;
 import com.tsac.projectwork.dataanalyser.data.Tweet;
 
 
 public class ConfigManager {
 	
+	public static Logger log = LogManager.getRootLogger();
 	//path of the configs files
 	private static String CONFIG_FILE = "properties.config";
 	private static String JSON_FILE = "JSONKeys.config";

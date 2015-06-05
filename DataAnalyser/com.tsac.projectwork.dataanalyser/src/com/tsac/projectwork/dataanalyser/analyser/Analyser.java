@@ -31,6 +31,7 @@ public class Analyser{
 					Analyse(t);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
+					ConfigManager.log.warn(e.getMessage());
 					e.printStackTrace();
 				}
 			}
@@ -53,6 +54,7 @@ public class Analyser{
 					extract = new Tweet(jsontweet);
 					tweets.add(extract);
 				}catch(JSONException je){
+					ConfigManager.log.warn(je.getMessage());
 					je.printStackTrace();
 				}
 			}
@@ -61,6 +63,7 @@ public class Analyser{
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
+				ConfigManager.log.warn(e.getMessage());
 				e.printStackTrace();
 				return null;
 			}
@@ -87,6 +90,7 @@ public class Analyser{
 						addScoreToList(scoreList, new Score(lang, t.getCountry(), t.getCreation(), 1 + (retw_mult * t.getNumRetweet())));
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
+						ConfigManager.log.warn(e.getMessage());
 						e.printStackTrace();
 					}
 				}
@@ -101,6 +105,7 @@ public class Analyser{
 			dbw.DoCommit();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			ConfigManager.log.warn(e.getMessage());
 			e.printStackTrace();
 		}
 		
