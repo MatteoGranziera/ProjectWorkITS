@@ -61,9 +61,12 @@ public class Analyser implements Runnable{
 			
 			List<Tweet> tweets = new ArrayList<Tweet>();
 			Tweet extract = null;
-			String jsontweet = dbr.getNextTweet().replaceAll("[\\\\].", "");
+			String jsontweet;
 			
-			for(int i = 0; i < num_tweets && (jsontweet = dbr.getNextTweet().replaceAll("[\\\\].", "")) != "NaN" ; i++){
+			for(int i = 0;i < num_tweets; i++){
+				
+				jsontweet = dbr.getNextTweet().replaceAll("[\\\\].", "");
+				
 				try{
 					extract = new Tweet(jsontweet);
 					tweets.add(extract);

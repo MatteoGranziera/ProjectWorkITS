@@ -39,7 +39,8 @@ public class ConfigManager {
 		
 		//DbReader names
 		public static final String DBREADER_ADDRESS_ = "dbr_address"; 
-		public static final String DBREADER_QUEUE_NAME = "dbr_queue_name"; 
+		public static final String DBREADER_QUEUE_NAME = "dbr_queue_name";
+		public static final String DBREADER_WAIT_IF_EMPTY = "wait_if_empty";
 		
 		//JSON tag names
 		public static final String JSON_KEY_TEXT = "key_text";
