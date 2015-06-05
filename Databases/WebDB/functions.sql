@@ -4,11 +4,11 @@ DECLARE
 lang ALIAS FOR $1;
 count ALIAS FOR $2;
 sc ALIAS FOR $3;
+mo ALIAS FOR $4;
 
   id_l INTEGER;
   id_c INTEGER;
   id_s INTEGER;
-  mo DATE;
 
 BEGIN
 
@@ -19,7 +19,7 @@ BEGIN
     RETURN FALSE;
   END IF;
 
-  SELECT INTO id_c id FROM countries WHERE name=count;
+  SELECT INTO id_c id FROM countries WHERE id_state_twitter=count;
 
   IF id_c IS NULL THEN
     RETURN FALSE;
