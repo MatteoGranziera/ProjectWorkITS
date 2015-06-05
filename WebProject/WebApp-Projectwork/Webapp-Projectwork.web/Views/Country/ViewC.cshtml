@@ -1,0 +1,104 @@
+﻿<link href="~/Content/StyleSheetProjectwork.css" rel="stylesheet" />
+
+@{
+    ViewBag.Title = "ViewC";
+}
+<h2>What is the most popular language here in @ViewBag.Country?</h2>
+<div id="pnl"></div>
+<div class="row">
+    <div class="col-md-4" id="legend"></div>
+    <div class="col-md-8">
+        <canvas id="myChart" width="200" height="200"></canvas>
+    </div>
+    
+</div>
+
+
+@section scripts{
+    <script src="~/Scripts/Chart.js"></script>
+    <script src="~/Scripts/randomcolor.js"></script>
+    <script src="~/Scripts/legend.js"></script>
+    <script type="text/javascript">
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dic"];
+        var myLineChart;
+        var arrayLanguage = [];
+        function loaddata(time, m) {
+            $.ajax({
+                url: '/api/Finalscore?country=@ViewBag.Country&m=' + time.getMonth() + '&y=' + time.getFullYear() + '&order=languages.name',
+                type: 'GET',
+                dataType: 'json',
+                async: false
+            }).done(function (data) {
+                var html = '';
+                var datas = [];
+                for (var l = 0; l < arrayLanguage.length; l++) {
+                    var ok = false;
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].namelanguage == arrayLanguage[l]) {
+                            datas.push(data[i].score);
+                            ok = true;
+                        }
+
+                    }
+
+                    if (!ok) {
+                        datas.push(0);
+                    }
+                }
+                myLineChart.addData(datas, m);
+
+                //   $('#pnl').html(html);
+            }).error(function (e) {
+                alert("errore")
+            })
+        }
+
+        $.ajax({
+            url: '/api/Languages',
+            type: 'GET',
+            dataType: 'json'
+        }).done(function (data) {
+            var html = '';
+            var datasetg = [];
+            for (var i = 0; i < data.length; i++) {
+                var color = randomColor({ format: 'rgb' });
+                var datal =
+                    {
+                        label: data[i],
+                        fillColor: "rgba(0,0,0,0)",
+                        strokeColor: color,
+                        pointColor: color,
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(220,220,220,1)",
+                        data: []
+                    };
+                datasetg.push(datal);
+                arrayLanguage.push(data[i]);
+            }
+            var datag = {
+                labels: [],
+                datasets: datasetg
+            };
+
+            Chart.defaults.global.responsive = true;
+            var ctx = $("#myChart").get(0).getContext("2d");
+            myLineChart = new Chart(ctx).Line(datag, undefined);
+            legend(document.getElementById("legend"), datag);
+            for (var i = 0; i < months.length; i++) {
+                loaddata(new Date("01, " + months[i] + ", 2015 00:00:00"), months[i]);
+            }
+            $('#pnl').html(html);
+        }).error(function (e) {
+            alert("errore")
+        })
+
+
+    </script>
+}
+
+
+
+
+
+
