@@ -97,7 +97,8 @@ def get_tweets(token, conn):
         a list of tweets (dictionaries) as returned by twitter API
     '''
     states = get_db_datas('states')
-    languages = get_db_datas('languages')
+    #languages = get_db_datas('languages')
+    languages = '"ASP.NET" OR "C" OR "C++" OR Delphi OR "C#" OR Fortran OR Haskell OR HTML OR Go OR Java OR Javascript OR "Objective-C" OR Perl OR PHP OR Python OR Ruby OR Scala OR SQL OR Swift OR "Visual Basic"'
 
     x = 0
     for state in states.values():
@@ -145,9 +146,12 @@ def clean_tweets(tweets):
         for word in whitelist:
             if tweet[word] != None:
                 new[word] = tweet[word]
-            if tweet['place']['country'] != None:
-                new['state'] = tweet['place']['country']
-        print(new)
+            try:
+                if tweet['place']['country'] != None:
+                    new['state'] = tweet['place']['country']
+            except Exception:
+                pass
+        #print(new)
         cleaned.append(new)
     return cleaned
     #return tweets
