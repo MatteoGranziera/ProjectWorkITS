@@ -3,7 +3,9 @@ package com.tsac.projectwork.dataanalyser;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.tsac.projectwork.dataanalyser.analyser.Analyser;
 import com.tsac.projectwork.dataanalyser.config.ConfigManager;
@@ -23,31 +25,26 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		/*DbReader db = new DbReader();
-		db.connect("192.168.56.101");
+		List<Analyser> analyserList = new ArrayList<Analyser>();
 		
-		System.out.println("Connecting to redis...");
+		for(int i = 0; i < Integer.parseInt(ConfigManager.getConfig(ConfigManager.Names.THREAD_NUMBER)); i++){
+			analyserList.add(new Analyser(i + 1));
+			Thread t = new Thread(analyserList.get(i));
+			t.start();
+			
+		}
+		
+		System.out.println("Started " + ConfigManager.getConfig(ConfigManager.Names.THREAD_NUMBER) + " Threads : " + ConfigManager.getConfig(ConfigManager.Names.NUM_TWEETS_THREAD) + " tweets for thread");
+		
+		while(true){
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
-		System.out.println("Tweet: " + db.getNextTweet());
-		
-		db.disconnect();*/
-		
-		/*DbWriter dbw = new DbWriter();
-		try {
-			dbw.Connect();
-			dbw.AddScore(new Score("Python", "Italia", new java.sql.Date(2015, 5, 1), 250));
-			dbw.Disconnect();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
-		Analyser an = new Analyser();
-		an.StartWorker();
-		System.exit(0);
 	}
 
 }

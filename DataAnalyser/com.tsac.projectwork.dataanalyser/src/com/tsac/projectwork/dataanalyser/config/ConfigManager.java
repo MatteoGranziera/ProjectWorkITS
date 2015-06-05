@@ -52,6 +52,7 @@ public class ConfigManager {
 		//Generic names
 		public static final String NUM_TWEETS_THREAD = "num_tweets_thread";
 		public static final String RETWEET_MULTIPLIER = "retweet_multiplier";
+		public static final String THREAD_NUMBER = "thread_number";
 	}
 	
 	public static void LoadConfiguration() throws FileNotFoundException, IOException{
@@ -65,6 +66,8 @@ public class ConfigManager {
 			db.Connect();
 			
 			langs = db.Getlanguages();
+			
+			db.Disconnect();
 			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block

@@ -13,11 +13,16 @@ import com.tsac.projectwork.dataanalyser.DbWriter;
 import com.tsac.projectwork.dataanalyser.config.ConfigManager;
 import com.tsac.projectwork.dataanalyser.data.*;
 
-public class Analyser{
+public class Analyser implements Runnable{
 	private int num_tweets = 10;
 	private int retw_mult = 1;
 	private List<Score> scoreList = new ArrayList<Score>();
 	private Map<String, String> languages = null;
+	private int threadNumber = 0;
+	
+	public Analyser(int th){
+		threadNumber = th;
+	}
 	
 	public void StartWorker(){
 		num_tweets = Integer.parseInt(ConfigManager.getConfig(ConfigManager.Names.NUM_TWEETS_THREAD));
@@ -98,12 +103,20 @@ public class Analyser{
 			for(Score sc : scoreList){
 				dbw.AddScore(sc);
 			}
+			System.out.println("Thread N." + threadNumber + " : Updated: " + scoreList.size() + " rows on DB");
 			dbw.DoCommit();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		StartWorker();
 		
 	}
 }
