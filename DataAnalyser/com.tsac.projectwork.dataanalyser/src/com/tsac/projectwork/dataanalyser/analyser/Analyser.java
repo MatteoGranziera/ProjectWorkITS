@@ -40,7 +40,17 @@ public class Analyser implements Runnable{
 				}
 			}
 			
-			
+			try(DbWriter dbw = new DbWriter();){
+				dbw.Connect();
+				for(Score sc : scoreList){
+					dbw.AddScore(sc);
+				}
+				System.out.println("Thread N." + threadNumber + " : Updated: " + scoreList.size() + " rows on DB");
+				dbw.DoCommit();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -97,19 +107,6 @@ public class Analyser implements Runnable{
 				}
 			}
 		}
-		
-		try(DbWriter dbw = new DbWriter();){
-			dbw.Connect();
-			for(Score sc : scoreList){
-				dbw.AddScore(sc);
-			}
-			System.out.println("Thread N." + threadNumber + " : Updated: " + scoreList.size() + " rows on DB");
-			dbw.DoCommit();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		
 	}
 

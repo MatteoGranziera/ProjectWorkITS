@@ -46,7 +46,7 @@ public class DbWriter implements AutoCloseable {
 	 * @return
 	 * @throws SQLException
 	 */
-	private int CheckIfExist(Score sc) throws SQLException{
+	/*private int CheckIfExist(Score sc) throws SQLException{
 		int index = -1;
 		String query = "SELECT S.id, L.name, C.name, S.month, S.score FROM scores S "
 				+ "LEFT JOIN languages L ON L.id = S.id_language "
@@ -76,7 +76,7 @@ public class DbWriter implements AutoCloseable {
 		st.close();
 		return index;
 
-	}
+	}*/
 	
 	/**
 	 * 
@@ -85,12 +85,21 @@ public class DbWriter implements AutoCloseable {
 	 */
 	public void AddScore(Score sc) throws SQLException
 	{
-		int index = CheckIfExist(sc);
-		String query = "UPDATE scores "
+		//int index = CheckIfExist(sc);
+		/*String query = "UPDATE scores "
 				+ "SET score = score + "+ sc.getValScore() +" "
-				+ "WHERE id = " + index;
-		Statement st = db.createStatement();
-		st.execute(query);
+				+ "WHERE id = " + index;*/
+		String query = "SELECT addscore(?, ? , ?, ?)";
+		PreparedStatement st = db.prepareStatement(query);
+		st.setString(1, sc.getpLanguage());
+		st.setString(2, sc.getCountry());
+		st.setInt(3, sc.getValScore());
+		st.setDate(4, (Date)sc.getMonth());
+		ResultSet rs = st.executeQuery();
+		rs.next();
+		if(rs.getBoolean(1)){
+			System.out.println("\tUpdated Row");
+		}
 		st.close();
 	}
 	
