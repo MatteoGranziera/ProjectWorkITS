@@ -8,6 +8,9 @@ import redis.clients.jedis.exceptions.JedisException;
 public class DbReader implements AutoCloseable{
 	Jedis conn = null;
 
+	/**
+	 * Connect to redis db (it takes config from ConfigManager)
+	 */
 	public void connect() {
 		if (conn == null) {
 			try{
@@ -20,6 +23,10 @@ public class DbReader implements AutoCloseable{
 
 	}
 	
+	/**
+	 * Get one tweet from redis
+	 * @return json string of tweet
+	 */
 	public String getNextTweet(){
 		if(conn!= null && conn.isConnected()){
 			return conn.lpop(ConfigManager.getConfig(ConfigManager.Names.DBREADER_QUEUE_NAME));
@@ -29,6 +36,9 @@ public class DbReader implements AutoCloseable{
 			return "NaN";
 	}
 	
+	/**
+	 * disconnect from redis 
+	 */
 	public void disconnect() {
 		if (conn != null) {
 			conn.close();
