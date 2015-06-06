@@ -5,8 +5,15 @@ import com.tsac.projectwork.dataanalyser.config.ConfigManager;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisException;
 
+/**
+ * 
+ * @author Matteo Granziera
+ *
+ */
 public class DbReader implements AutoCloseable{
-	Jedis conn = null;
+	
+	//Variables
+	private Jedis conn = null;
 
 	/**
 	 * Connect to redis db (it takes config from ConfigManager)
@@ -20,12 +27,11 @@ public class DbReader implements AutoCloseable{
 				System.out.println(e.getMessage());
 			}
 		}
-
 	}
 	
 	/**
-	 * Get one tweet from redis
-	 * @return json string of tweet
+	 * Get one tweet from redis. If the queue is empty wait for wait time setted and retry
+	 * @return json string of next tweet in the queue
 	 */
 	public String getNextTweet(){
 		while(true)
@@ -35,14 +41,14 @@ public class DbReader implements AutoCloseable{
 				if(res != null){
 					return res;
 				}
-				System.out.println("Queue is empty... Retry in 10 seconds");
+				System.out.println("Queue is empty... Retry in " + ConfigManager.getConfig(ConfigManager.Names.DBREADER_WAIT_IF_EMPTY) + "ms");
 				try {
 					Thread.sleep(Integer.parseInt(ConfigManager.getConfig(ConfigManager.Names.DBREADER_WAIT_IF_EMPTY)));
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//return "{'text':'#Python, is java beacuse python is #Java','created_at':'Wed Aug 27 13:08:45 +0000 2015','retweeted':'False','hashtags':[],'retweet_count':'0','state':'Italy'}";
+				//Example of tweets "{'text':'#Python, is java beacuse python is #Java','created_at':'Wed Aug 27 13:08:45 +0000 2015','retweeted':'False','hashtags':[],'retweet_count':'0','state':'Italy'}";
 			}
 		}
 	}
@@ -54,12 +60,10 @@ public class DbReader implements AutoCloseable{
 		if (conn != null) {
 			conn.close();
 		}
-
 	}
 
 	@Override
 	public void close() throws Exception {
 		disconnect();
-		
 	}
 }

@@ -7,20 +7,23 @@ import java.util.Map;
 
 import com.tsac.projectwork.dataanalyser.config.ConfigManager;
 import com.tsac.projectwork.dataanalyser.data.Score;
+/**
+ * 
+ * @author Matteo Granziera
+ *
+ */
 public class DbWriter implements AutoCloseable {
 	//Connection variables
-	String address = "";
-	String username = "";
-	String password = "";
-	
-	Connection db = null;
-	boolean auto_commit = false;
+	private String address = "";
+	private String username = "";
+	private String password = "";
+	private Connection db = null;
+	private boolean auto_commit = false;
 	
 	/**
 	 * Load variables from ConfigManager
 	 */
 	private void LoadVariable(){
-
 		address = ConfigManager.getConfig(ConfigManager.Names.DBWRITER_ADDRESS);
 		username = ConfigManager.getConfig(ConfigManager.Names.DBWRITER_USER);
 		password = ConfigManager.getConfig(ConfigManager.Names.DBWRITER_PASSWORD);
@@ -34,61 +37,17 @@ public class DbWriter implements AutoCloseable {
 	public void Connect() throws ClassNotFoundException, SQLException{
 			LoadVariable();
 			Class.forName("org.postgresql.Driver");
-			
 			db = DriverManager.getConnection(address, username , password);
 			db.setAutoCommit(auto_commit);
-			//System.out.println(db.isClosed());
 	}
 	
 	/**
-	 * Check if exists a row with combination of language, country and month
-	 * @param sc
-	 * @return
-	 * @throws SQLException
-	 */
-	/*private int CheckIfExist(Score sc) throws SQLException{
-		int index = -1;
-		String query = "SELECT S.id, L.name, C.name, S.month, S.score FROM scores S "
-				+ "LEFT JOIN languages L ON L.id = S.id_language "
-				+ "LEFT JOIN countries C ON C.id= S.id_country "
-				+ "WHERE C.id_state_twitter = ? AND L.name = ?";
-		PreparedStatement st = (PreparedStatement) db.prepareStatement(query);
-		st.setString(1, sc.getCountry());
-		st.setString(2, sc.getpLanguage());
-		ResultSet rs = st.executeQuery();
-		
-		if(rs.next()){
-			index = rs.getInt(1);
-		}else{
-			query = "INSERT INTO scores(id_country, id_language, score, month) VALUES ( "
-					+ "(SELECT id FROM countries WHERE id_state_twitter = ? ) , "
-					+ "(SELECT id FROM languages WHERE name = ? ) , 0, ? ) RETURNING id";
-			st = db.prepareStatement(query);
-			st.setString(1, sc.getCountry());
-			st.setString(2, sc.getpLanguage());
-			st.setDate(3, (Date) sc.getMonth());
-			rs = st.executeQuery();
-			rs.next();
-			index = rs.getInt(1);
-		}
-		
-		rs.close();
-		st.close();
-		return index;
-
-	}*/
-	
-	/**
-	 * 
-	 * @param sc
+	 * Add a score on database. If row doesn't exists it create
+	 * @param sc com.tsac.projectwork.data.Score to add
 	 * @throws SQLException
 	 */
 	public void AddScore(Score sc) throws SQLException
 	{
-		//int index = CheckIfExist(sc);
-		/*String query = "UPDATE scores "
-				+ "SET score = score + "+ sc.getValScore() +" "
-				+ "WHERE id = " + index;*/
 		String query = "SELECT addscore(?, ? , ?, ?)";
 		PreparedStatement st = db.prepareStatement(query);
 		st.setString(1, sc.getpLanguage());
@@ -103,16 +62,30 @@ public class DbWriter implements AutoCloseable {
 		st.close();
 	}
 	
+	/**
+	 * Do all commits to the database
+	 * @throws SQLException
+	 */
 	public void DoCommit() throws SQLException {
 		db.commit();
 	}
 	
+	/**
+	 * Disconnect form database
+	 * @throws SQLException
+	 */
 	public void Disconnect() throws SQLException{
 		if(db != null){
 			db.close();
 		}
 	}
 	
+	/**
+	 * Get languages on database
+	 * @return Map of languages (composed with language, and List of tags of the language)
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	public Map<String, String[]> Getlanguages() throws ClassNotFoundException, SQLException{
 		Map<String, String[]> langs = new HashMap<String, String[]>();
 		
