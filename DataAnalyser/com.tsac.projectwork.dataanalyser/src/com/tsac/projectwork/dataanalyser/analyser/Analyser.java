@@ -20,26 +20,37 @@ public class Analyser implements Runnable{
 	private Map<String, String> languages = null;
 	private int threadNumber = 0;
 	
+	/**
+	 * Constructor
+	 * @param th number of associated Thread
+	 */
 	public Analyser(int th){
 		threadNumber = th;
 	}
 	
+	/**
+	 * Start work of analyser
+	 */
 	public void StartWorker(){
+		//Load configs
 		num_tweets = Integer.parseInt(ConfigManager.getConfig(ConfigManager.Names.NUM_TWEETS_THREAD));
 		retw_mult = Integer.parseInt(ConfigManager.getConfig(ConfigManager.Names.RETWEET_MULTIPLIER));
 		languages = ConfigManager.getLanguagesRegEx();
+		
+		//Main Cycle
 		while(true){
+			//Get tweets from NoSQL database
 			List<Tweet> tweets = ReadTweets();
 			
 			for(Tweet t : tweets){
 				try {
 					Analyse(t);
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 			
+			//Write on db new rows and update rows
 			try(DbWriter dbw = new DbWriter();){
 				dbw.Connect();
 				for(Score sc : scoreList){
@@ -54,6 +65,10 @@ public class Analyser implements Runnable{
 		}
 	}
 	
+	/**
+	 * Get tweets from Redis db. the number of tweets depend on line "num_tweets_thread" in config file
+	 * @return
+	 */
 	private List<Tweet> ReadTweets(){
 		try(DbReader dbr = new DbReader()){
 			
@@ -64,9 +79,7 @@ public class Analyser implements Runnable{
 			String jsontweet;
 			
 			for(int i = 0;i < num_tweets; i++){
-				
-				jsontweet = dbr.getNextTweet().replaceAll("[\\\\].", "");
-				
+				jsontweet = dbr.getNextTweet().replaceAll("[\\\\].", ""); //Remove all '\' and the next character because they create some problem in parse
 				try{
 					extract = new Tweet(jsontweet);
 					tweets.add(extract);
@@ -83,7 +96,11 @@ public class Analyser implements Runnable{
 				return null;
 			}
 	}
-	
+	/**
+	 * Merge the score obtained from analyse of a tweet into list of scores
+	 * @param lst list of scores
+	 * @param sc score to merge
+	 */
 	private void addScoreToList(List<Score> lst , Score sc){
 		boolean ok = false;
 		for(Score s : lst){
@@ -97,6 +114,11 @@ public class Analyser implements Runnable{
 		}
 	}
 	
+	/**
+	 * Analyse tweet
+	 * @param t
+	 * @throws JSONException
+	 */
 	private void Analyse(Tweet t) throws JSONException{
 		for(String lang: languages.keySet()){
 			if(!t.getRetweeted()){
