@@ -54,6 +54,7 @@ public class ConfigManager {
 		public static final String NUM_TWEETS_THREAD = "num_tweets_thread";
 		public static final String RETWEET_MULTIPLIER = "retweet_multiplier";
 		public static final String THREAD_NUMBER = "thread_number";
+		public static final String CONSOLE_LOG = "console_log";
 	}
 	
 	public static void LoadConfiguration() throws FileNotFoundException, IOException{
