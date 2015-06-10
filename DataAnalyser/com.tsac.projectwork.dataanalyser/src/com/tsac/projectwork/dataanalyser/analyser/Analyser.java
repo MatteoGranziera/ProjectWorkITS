@@ -12,6 +12,7 @@ import com.tsac.projectwork.dataanalyser.DbReader;
 import com.tsac.projectwork.dataanalyser.DbWriter;
 import com.tsac.projectwork.dataanalyser.config.ConfigManager;
 import com.tsac.projectwork.dataanalyser.data.*;
+import com.tsac.projectwork.dataanalyser.log.Log;
 
 public class Analyser implements Runnable{
 	private int num_tweets = 10;
@@ -42,11 +43,13 @@ public class Analyser implements Runnable{
 			//Get tweets from NoSQL database
 			List<Tweet> tweets = ReadTweets();
 			
+			Log.LogInfo("Thread N." + threadNumber + " : Readed: " + tweets.size() + " tweets from DB");
+			
 			for(Tweet t : tweets){
 				try {
 					Analyse(t);
 				} catch (JSONException e) {
-					e.printStackTrace();
+					Log.LogError(e);
 				}
 			}
 			
@@ -56,11 +59,11 @@ public class Analyser implements Runnable{
 				for(Score sc : scoreList){
 					dbw.AddScore(sc);
 				}
-				System.out.println("Thread N." + threadNumber + " : Updated: " + scoreList.size() + " rows on DB");
+				Log.LogInfo("Thread N." + threadNumber + " : Updated: " + scoreList.size() + " rows on DB");
 				dbw.DoCommit();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.LogError(e);
 			}
 		}
 	}
@@ -84,7 +87,7 @@ public class Analyser implements Runnable{
 					extract = new Tweet(jsontweet);
 					tweets.add(extract);
 				}catch(JSONException je){
-					je.printStackTrace();
+					Log.LogError(je);
 				}
 			}
 			
@@ -92,7 +95,7 @@ public class Analyser implements Runnable{
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.LogError(e);
 				return null;
 			}
 	}
@@ -127,7 +130,7 @@ public class Analyser implements Runnable{
 						addScoreToList(scoreList, new Score(lang, t.getCountry(), t.getCreation(), 1 + (retw_mult * t.getNumRetweet())));
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Log.LogError(e);
 					}
 				}
 			}

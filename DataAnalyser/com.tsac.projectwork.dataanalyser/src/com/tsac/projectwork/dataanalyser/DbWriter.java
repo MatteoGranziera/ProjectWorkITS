@@ -7,6 +7,8 @@ import java.util.Map;
 
 import com.tsac.projectwork.dataanalyser.config.ConfigManager;
 import com.tsac.projectwork.dataanalyser.data.Score;
+import com.tsac.projectwork.dataanalyser.log.Log;
+import com.tsac.projectwork.dataanalyser.log.LogEntity;
 /**
  * 
  * @author Matteo Granziera
@@ -56,8 +58,8 @@ public class DbWriter implements AutoCloseable {
 		st.setDate(4, (Date)sc.getMonth());
 		ResultSet rs = st.executeQuery();
 		rs.next();
-		if(rs.getBoolean(1)){
-			System.out.println("\tUpdated Row");
+		if(!rs.getBoolean(1)){
+			Log.LogInfo("Row not updated");
 		}
 		st.close();
 	}
@@ -98,6 +100,18 @@ public class DbWriter implements AutoCloseable {
 		}
 		
 		return langs;
+	}
+	
+	public void WriteLog(LogEntity log) throws SQLException{
+		String query = "INSERT INTO logs(datetime, type, text, trace) VALUES(?, ?, ?, ?)";
+		PreparedStatement st = db.prepareStatement(query);
+		st.setDate(1, log.getDatetime());
+		st.setString(2, log.getType());
+		st.setString(3, log.getMessage());
+		st.setString(4, log.getTraceback());
+		st.execute();
+		st.close();
+		DoCommit();
 	}
 
 	@Override

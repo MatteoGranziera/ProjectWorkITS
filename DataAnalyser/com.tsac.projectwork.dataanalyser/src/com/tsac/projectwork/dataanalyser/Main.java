@@ -10,6 +10,7 @@ import java.util.List;
 import com.tsac.projectwork.dataanalyser.analyser.Analyser;
 import com.tsac.projectwork.dataanalyser.config.ConfigManager;
 import com.tsac.projectwork.dataanalyser.data.Score;
+import com.tsac.projectwork.dataanalyser.log.Log;
 
 public class Main {
 	
@@ -19,10 +20,10 @@ public class Main {
 			ConfigManager.LoadConfiguration();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.LogError(e);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.LogError(e);
 		}
 		
 		List<Analyser> analyserList = new ArrayList<Analyser>();
@@ -34,14 +35,14 @@ public class Main {
 			
 		}
 		
-		System.out.println("Started " + ConfigManager.getConfig(ConfigManager.Names.THREAD_NUMBER) + " Threads : " + ConfigManager.getConfig(ConfigManager.Names.NUM_TWEETS_THREAD) + " tweets for thread");
+		Log.LogInfo(("Started " + ConfigManager.getConfig(ConfigManager.Names.THREAD_NUMBER) + " Threads : " + ConfigManager.getConfig(ConfigManager.Names.NUM_TWEETS_THREAD) + " tweets for thread"));
 		
 		while(true){
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.LogError(e);
 			}
 		}
 

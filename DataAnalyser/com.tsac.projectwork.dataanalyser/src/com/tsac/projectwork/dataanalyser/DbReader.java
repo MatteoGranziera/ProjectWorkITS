@@ -1,6 +1,7 @@
 package com.tsac.projectwork.dataanalyser;
 
 import com.tsac.projectwork.dataanalyser.config.ConfigManager;
+import com.tsac.projectwork.dataanalyser.log.Log;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisException;
@@ -24,7 +25,7 @@ public class DbReader implements AutoCloseable{
 			conn = new Jedis(ConfigManager.getConfig(ConfigManager.Names.DBREADER_ADDRESS_));
 			conn.connect();
 			}catch(JedisException e){
-				System.out.println(e.getMessage());
+				Log.LogError(e);
 			}
 		}
 	}
@@ -41,12 +42,12 @@ public class DbReader implements AutoCloseable{
 				if(res != null){
 					return res;
 				}
-				System.out.println("Queue is empty... Retry in " + ConfigManager.getConfig(ConfigManager.Names.DBREADER_WAIT_IF_EMPTY) + "ms");
+				Log.LogInfo(("Queue is empty... Retry in " + ConfigManager.getConfig(ConfigManager.Names.DBREADER_WAIT_IF_EMPTY) + "ms"));
 				try {
 					Thread.sleep(Integer.parseInt(ConfigManager.getConfig(ConfigManager.Names.DBREADER_WAIT_IF_EMPTY)));
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.LogError(e);
 				}
 				//Example of tweets "{'text':'#Python, is java beacuse python is #Java','created_at':'Wed Aug 27 13:08:45 +0000 2015','retweeted':'False','hashtags':[],'retweet_count':'0','state':'Italy'}";
 			}

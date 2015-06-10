@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import com.tsac.projectwork.dataanalyser.DbWriter;
 import com.tsac.projectwork.dataanalyser.data.Tweet;
+import com.tsac.projectwork.dataanalyser.log.Log;
 
 
 public class ConfigManager {
@@ -73,13 +74,13 @@ public class ConfigManager {
 			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.LogError(e);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e1) {
+			Log.LogError(e);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			Log.LogError(e);
 		}
 		
 	}
