@@ -1,6 +1,7 @@
 languages = {
 "Java":"Java,#Java",
 "C":"#C",
+"C++":"CplusPlus, #C++, #Cpp",
 "Objective-C":"Objective-C,#Objective-C",
 "CSharp":"CSharp,#CSharp",
 "Python":"Python,#Python",

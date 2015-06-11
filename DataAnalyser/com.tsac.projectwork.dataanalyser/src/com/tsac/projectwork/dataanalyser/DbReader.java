@@ -8,6 +8,9 @@ import redis.clients.jedis.exceptions.JedisException;
 public class DbReader implements AutoCloseable{
 	Jedis conn = null;
 
+	/**
+	 * Connect to redis db (it takes config from ConfigManager)
+	 */
 	public void connect() {
 		if (conn == null) {
 			try{
@@ -20,15 +23,33 @@ public class DbReader implements AutoCloseable{
 
 	}
 	
+	/**
+	 * Get one tweet from redis
+	 * @return json string of tweet
+	 */
 	public String getNextTweet(){
-		if(conn!= null && conn.isConnected()){
-			return conn.lpop(ConfigManager.getConfig(ConfigManager.Names.DBREADER_QUEUE_NAME));
-			//return "{'text':'#Python, is java beacuse python is #Java','created_at':'Wed Aug 27 13:08:45 +0000 2015','retweeted':'False','hashtags':[],'retweet_count':'0','state':'Italy'}";
+		while(true)
+		{
+			if(conn!= null && conn.isConnected()){
+				String res = conn.lpop(ConfigManager.getConfig(ConfigManager.Names.DBREADER_QUEUE_NAME));
+				if(res != null){
+					return res;
+				}
+				System.out.println("Queue is empty... Retry in 10 seconds");
+				try {
+					Thread.sleep(Integer.parseInt(ConfigManager.getConfig(ConfigManager.Names.DBREADER_WAIT_IF_EMPTY)));
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//return "{'text':'#Python, is java beacuse python is #Java','created_at':'Wed Aug 27 13:08:45 +0000 2015','retweeted':'False','hashtags':[],'retweet_count':'0','state':'Italy'}";
+			}
 		}
-		else
-			return "NaN";
 	}
 	
+	/**
+	 * disconnect from redis 
+	 */
 	public void disconnect() {
 		if (conn != null) {
 			conn.close();

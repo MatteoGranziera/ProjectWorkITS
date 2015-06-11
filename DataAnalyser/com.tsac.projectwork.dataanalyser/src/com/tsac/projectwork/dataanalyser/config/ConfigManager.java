@@ -17,7 +17,7 @@ import com.tsac.projectwork.dataanalyser.data.Tweet;
 public class ConfigManager {
 	
 	//path of the configs files
-	private static String CONFIG_FILE = "properties.config";
+	private static String CONFIG_FILE = "properties.config.remote";
 	private static String JSON_FILE = "JSONKeys.config";
 	
 	//properties instances
@@ -39,7 +39,8 @@ public class ConfigManager {
 		
 		//DbReader names
 		public static final String DBREADER_ADDRESS_ = "dbr_address"; 
-		public static final String DBREADER_QUEUE_NAME = "dbr_queue_name"; 
+		public static final String DBREADER_QUEUE_NAME = "dbr_queue_name";
+		public static final String DBREADER_WAIT_IF_EMPTY = "wait_if_empty";
 		
 		//JSON tag names
 		public static final String JSON_KEY_TEXT = "key_text";
@@ -52,6 +53,7 @@ public class ConfigManager {
 		//Generic names
 		public static final String NUM_TWEETS_THREAD = "num_tweets_thread";
 		public static final String RETWEET_MULTIPLIER = "retweet_multiplier";
+		public static final String THREAD_NUMBER = "thread_number";
 	}
 	
 	public static void LoadConfiguration() throws FileNotFoundException, IOException{
@@ -65,6 +67,8 @@ public class ConfigManager {
 			db.Connect();
 			
 			langs = db.Getlanguages();
+			
+			db.Disconnect();
 			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block

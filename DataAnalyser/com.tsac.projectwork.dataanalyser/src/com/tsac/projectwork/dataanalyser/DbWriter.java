@@ -16,6 +16,9 @@ public class DbWriter implements AutoCloseable {
 	Connection db = null;
 	boolean auto_commit = false;
 	
+	/**
+	 * Load variables from ConfigManager
+	 */
 	private void LoadVariable(){
 
 		address = ConfigManager.getConfig(ConfigManager.Names.DBWRITER_ADDRESS);
@@ -23,21 +26,32 @@ public class DbWriter implements AutoCloseable {
 		password = ConfigManager.getConfig(ConfigManager.Names.DBWRITER_PASSWORD);
 	}
 	
+	/**
+	 * Connet to postgres database
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	public void Connect() throws ClassNotFoundException, SQLException{
 			LoadVariable();
 			Class.forName("org.postgresql.Driver");
 			
 			db = DriverManager.getConnection(address, username , password);
 			db.setAutoCommit(auto_commit);
-			System.out.println(db.isClosed());
+			//System.out.println(db.isClosed());
 	}
 	
-	private int CheckIfExist(Score sc) throws SQLException{
+	/**
+	 * Check if exists a row with combination of language, country and month
+	 * @param sc
+	 * @return
+	 * @throws SQLException
+	 */
+	/*private int CheckIfExist(Score sc) throws SQLException{
 		int index = -1;
 		String query = "SELECT S.id, L.name, C.name, S.month, S.score FROM scores S "
 				+ "LEFT JOIN languages L ON L.id = S.id_language "
-				+ "LEFT JOIN countries C ON C.id=S.id_country "
-				+ "WHERE C.name = ? AND L.name = ?";
+				+ "LEFT JOIN countries C ON C.id= S.id_country "
+				+ "WHERE C.id_state_twitter = ? AND L.name = ?";
 		PreparedStatement st = (PreparedStatement) db.prepareStatement(query);
 		st.setString(1, sc.getCountry());
 		st.setString(2, sc.getpLanguage());
@@ -47,7 +61,7 @@ public class DbWriter implements AutoCloseable {
 			index = rs.getInt(1);
 		}else{
 			query = "INSERT INTO scores(id_country, id_language, score, month) VALUES ( "
-					+ "(SELECT id FROM countries WHERE name = ? ) , "
+					+ "(SELECT id FROM countries WHERE id_state_twitter = ? ) , "
 					+ "(SELECT id FROM languages WHERE name = ? ) , 0, ? ) RETURNING id";
 			st = db.prepareStatement(query);
 			st.setString(1, sc.getCountry());
@@ -62,16 +76,30 @@ public class DbWriter implements AutoCloseable {
 		st.close();
 		return index;
 
-	}
+	}*/
 	
+	/**
+	 * 
+	 * @param sc
+	 * @throws SQLException
+	 */
 	public void AddScore(Score sc) throws SQLException
 	{
-		int index = CheckIfExist(sc);
-		String query = "UPDATE scores "
+		//int index = CheckIfExist(sc);
+		/*String query = "UPDATE scores "
 				+ "SET score = score + "+ sc.getValScore() +" "
-				+ "WHERE id = " + index;
-		Statement st = db.createStatement();
-		st.execute(query);
+				+ "WHERE id = " + index;*/
+		String query = "SELECT addscore(?, ? , ?, ?)";
+		PreparedStatement st = db.prepareStatement(query);
+		st.setString(1, sc.getpLanguage());
+		st.setString(2, sc.getCountry());
+		st.setInt(3, sc.getValScore());
+		st.setDate(4, (Date)sc.getMonth());
+		ResultSet rs = st.executeQuery();
+		rs.next();
+		if(rs.getBoolean(1)){
+			System.out.println("\tUpdated Row");
+		}
 		st.close();
 	}
 	

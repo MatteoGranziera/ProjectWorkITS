@@ -111,13 +111,13 @@ def get_tweets(token, conn):
                             )
         resp.raise_for_status()
         tweets = resp.json()
-        tweets = clean_tweets(tweets['statuses'])
+        tweets = clean_tweets(tweets['statuses'], state)
         log.info('saving tweets')
         save_tweets(tweets, conn)
     redis.Redis.rpush(conn, 'tweets', 'Finished')
     return
 
-def clean_tweets(tweets):
+def clean_tweets(tweets, state):
     '''
     Parameters:
         tweets: list of tweets        
@@ -126,14 +126,13 @@ def clean_tweets(tweets):
     '''
     cleaned = []
     whitelist = ['text', 'created_at', 'retweeted', 'retweet_count',]
-    '''
     words = ['metadata', 'id', 'favorite_count', 'possibly_sensitive', 'source', 'geo', 'in_reply_to_status_id_str', 
     'in_reply_to_status_id', 'in_reply_to_user_id', 'user', 'truncated', 'in_reply_to_user_id_str', 'in_reply_to_screen_name', 
-    'contributors', 'lang', 'coordinates', 'entities', 'retweeted_status', 'id_str', 'favorited', 'place']
+    'contributors', 'lang', 'coordinates', 'entities', 'retweeted_status', 'id_str', 'favorited',]
     
     for tweet in tweets:
         if tweet['place'] != None:
-            tweet['state'] = tweet['place']['country']
+            tweet['state'] = state
         tweet['hashtags'] = tweet['entities']['hashtags']
         for word in words:
             try:
@@ -148,13 +147,14 @@ def clean_tweets(tweets):
                 new[word] = tweet[word]
             try:
                 if tweet['place']['country'] != None:
-                    new['state'] = tweet['place']['country']
+                    new['state'] = state
             except Exception:
                 pass
         #print(new)
         cleaned.append(new)
     return cleaned
-    #return tweets
+    '''
+    return tweets
 
 def get_redis_connection():
     '''
