@@ -2,6 +2,9 @@
 '''
 TODO:
     create new dict from tweets, no deleting useless keys
+    create a main function instead of leaving code in ifmain condition
+    fix reading languages data from database
+    define new log system (expired logentries trial)
 '''
 
 
